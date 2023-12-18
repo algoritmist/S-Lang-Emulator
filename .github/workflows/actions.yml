@@ -9,10 +9,8 @@ on:
 
 jobs:
   build-and-test:
-    docker:
-      - image: haskell:9
-  
-    working-directory: .
+    runs-on: ubuntu-latest
+    container: haskell:9
     steps:
       - name: Checkout
         uses: actions/checkout@v3
