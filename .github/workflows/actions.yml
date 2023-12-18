@@ -16,8 +16,8 @@ jobs:
     build:
       steps:
         - uses: actions/checkout@v3
-        - run: cabal build
+          run: cabal build
     test:
       steps:
         - uses: actions/checkout@v3
-        - run: cabal run Emulator-test
+          run: cabal run Emulator-test
