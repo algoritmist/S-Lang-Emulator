@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    container: haskell:9
+    container: haskell:9.4.8-buster
     steps:
       - name: Checkout
         uses: actions/checkout@v3
