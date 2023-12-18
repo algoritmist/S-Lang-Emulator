@@ -13,11 +13,10 @@ jobs:
       - image: haskell:9
   
     working-directory: .
-    build:
-      steps:
-        - uses: actions/checkout@v3
-          run: cabal build
-    test:
-      steps:
-        - uses: actions/checkout@v3
-          run: cabal run Emulator-test
+    steps:
+      - name: build
+        uses: actions/checkout@v3
+        run: cabal build
+      - name: test
+        uses: actions/checkout@v3
+        run: cabal run Emulator-test
