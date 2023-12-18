@@ -1,0 +1,23 @@
+name: Github Actions on Slang-Emulator
+run-name: ${{ github.actor }} started workflow
+
+on:
+  push:
+    branches: ["master", "workflow"]
+  pull_request:
+    branches: ["master", "workflow"]
+
+jobs:
+  build-and-test:
+    docker:
+      - image: haskell:9
+  
+    working-directory: .
+    build:
+      steps:
+        - uses: actions/checkout@v3
+        - run: cabal build
+    test:
+      steps:
+        - uses: actions/checkout@v3
+        - run: cabal run Emulator-test

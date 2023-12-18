@@ -1,0 +1,67 @@
+cabal-version: 3.8
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           Emulator
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/Emulator#readme>
+homepage:       https://github.com/githubuser/Emulator#readme
+bug-reports:    https://github.com/githubuser/Emulator/issues
+author:         Viacheslav Baranov
+maintainer:     alg0ritmist@mail.ru
+copyright:      2023 Viachelsav Baranov
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/Emulator
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable Emulator-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , base >=4.7 && <5
+  default-language: Haskell2010
+
+test-suite Emulator-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , base >=4.7 && <5
+  default-language: Haskell2010
