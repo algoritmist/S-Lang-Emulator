@@ -1,0 +1,29 @@
+name: Github Actions on Slang-Emulator
+run-name: ${{ github.actor }} started workflow
+
+on:
+  push:
+    branches: ["main", "workflow"]
+  pull_request:
+    branches: ["main", "workflow"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container: haskell:9.4.8-buster
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: cabal update
+      - uses: haskell-actions/hlint-setup@v2
+        with:
+          version: '3.1.6'
+      - name: Lint
+        uses: haskell-actions/hlint-run@v2
+        with:
+          path: '["src/", "test/"]'
+          fail-on: warning
+      - name: Build
+        run: cabal build
+      - name: Test
+        run: cabal run Emulator-test
