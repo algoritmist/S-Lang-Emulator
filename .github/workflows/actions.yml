@@ -3,9 +3,9 @@ run-name: ${{ github.actor }} started workflow
 
 on:
   push:
-    branches: ["master", "workflow"]
+    branches: ["main", "workflow"]
   pull_request:
-    branches: ["master", "workflow"]
+    branches: ["main", "workflow"]
 
 jobs:
   build-and-test:
