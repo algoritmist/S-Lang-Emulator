@@ -14,9 +14,9 @@ jobs:
   
     working-directory: .
     steps:
-      - name: build
+      - name: Checkout
         uses: actions/checkout@v3
+      - name: build
         run: cabal build
       - name: test
-        uses: actions/checkout@v3
         run: cabal run Emulator-test
