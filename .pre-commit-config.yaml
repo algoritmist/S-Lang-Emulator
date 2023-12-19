@@ -9,7 +9,8 @@ repos:
   hooks:
     - id: stylish-haskell
     - id: hlint
-- repo: local
+- repo: https://github.com/algoritmist/haskell-golden-tests-pre-commit-hook.git
+  rev: 125db9c8ad8d84040c2bf643b1894f91de5c2fb1
   hooks:
     - id: golden-test
       name: Run golden tests
