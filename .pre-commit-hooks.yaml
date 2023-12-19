@@ -1,0 +1,5 @@
+- id: golden-test
+  name: Run golden tests
+  description: This hook runs golden tests before commit
+  entry: cabal test
+  language: system

@@ -9,3 +9,12 @@ repos:
   hooks:
     - id: stylish-haskell
     - id: hlint
+- repo: local
+  hooks:
+    - id: golden-test
+      name: Run golden tests
+      description: This hook runs golden tests before commit
+      language: system
+      pass_filenames: false
+      entry: cabal run Emulator-test
+
