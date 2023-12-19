@@ -1,0 +1,1 @@
+main = output("Hello, world!");
