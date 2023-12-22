@@ -11,7 +11,7 @@ textToResult _ = BLU.fromString "Translator not implemented yet"
 
 goldenTests :: IO TestTree
 goldenTests = do
-  slangFiles <- findByExtension [".sl"] "test"
+  slangFiles <- findByExtension [".sl"] "golden"
   return $ testGroup "Slang golden tests"
     [ goldenVsString
         (takeBaseName slangFile) -- test name
