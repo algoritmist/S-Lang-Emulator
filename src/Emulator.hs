@@ -1,5 +1,8 @@
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE TupleSections  #-}
+
 module Emulator where
-import           Data.Map as Map
+import           Data.Map (Map, fromList, insert, (!))
 import           ISA
 
 maxDMem = 4096
@@ -22,12 +25,12 @@ data CPU = CPU{
 initDefault :: CPU
 initDefault =
     let
-        generator = Prelude.map (, 0) (iterate (+ 1) 0)
-        regs = Map.fromList $ Prelude.map (, 0) registers
-        iMem = Map.fromList $ Prelude.take maxIMem $  Prelude.map (, Nop) (iterate (+ 1) 0)
-        dMem = Map.fromList  $ Prelude.take maxDMem generator
-        inMem = Map.fromList $ Prelude.take maxInMem generator
-        outMem = Map.fromList $ Prelude.take maxOutMem generator
+        generator = map (, 0) (iterate (+ 1) 0)
+        regs = fromList $ map (, 0) registers
+        iMem = fromList $ take maxIMem $  map (, Nop) (iterate (+ 1) 0)
+        dMem = fromList  $ take maxDMem generator
+        inMem = fromList $ take maxInMem generator
+        outMem = fromList $ take maxOutMem generator
     in CPU regs iMem dMem inMem outMem
 
 emulate :: CPU -> IO ()
@@ -46,7 +49,7 @@ postExecute :: CPU -> CPU
 postExecute cpu@(CPU regs iMem dMem inMem outMem) =
     let
         pc = regs ! ISA.pc
-        regs' = Map.insert ISA.pc (pc + 4) regs
+        regs' = insert ISA.pc (pc + 4) regs
     in
         CPU regs' iMem dMem inMem outMem
 
@@ -59,7 +62,7 @@ execute (CPU regs iMem dMem inMem outMem) operator@(MathOp opcode rd rs1 rs2 _) 
         3 -> Right Prelude.div
         _ -> Left $ "Error: No math operation with opcode " ++ show opcode
     let alu = (regs ! rs1) `op` (regs ! rs2)
-    let regs' = Map.insert rd alu regs
+    let regs' = insert rd alu regs
     Right $ CPU regs' iMem dMem inMem outMem
 
 execute cpu@(CPU regs iMem dMem inMem outMem) branch@(Branch opcode _ rs1 rs2 imm) = do
@@ -71,7 +74,7 @@ execute cpu@(CPU regs iMem dMem inMem outMem) branch@(Branch opcode _ rs1 rs2 im
         _ -> Left $ "Error: No branch instruction with opcode " ++ show opcode
     let alu = (regs ! rs1) `op` (regs ! rs2)
     let pc = regs ! ISA.pc
-    let regs' = Map.insert ISA.pc (pc + imm) regs
+    let regs' = insert ISA.pc (pc + imm) regs
     Right $ CPU regs' iMem dMem inMem outMem
 
 execute cpu@(CPU regs iMem dMem inMem outMem) oparator@(MathImmideate opcode rd rs1 imm) = do
@@ -83,7 +86,7 @@ execute cpu@(CPU regs iMem dMem inMem outMem) oparator@(MathImmideate opcode rd 
         _  -> Left $ "Error: No math operation with opcode " ++ show opcode
 
     let alu = (regs ! rs1) `op` imm
-    let regs' = Map.insert rd alu regs
+    let regs' = insert rd alu regs
     Right $ CPU regs' iMem dMem inMem outMem
 
 execute cpu@(CPU regs iMem dMem inMem outMem) operation@(RegisterMemory opcode rd rs1 imm) = do
@@ -91,11 +94,11 @@ execute cpu@(CPU regs iMem dMem inMem outMem) operation@(RegisterMemory opcode r
     case opcode of
         20 -> do
             let dValue = dMem ! addr
-            let regs' = Map.insert rd dValue regs
+            let regs' = insert rd dValue regs
             Right $ CPU regs' iMem dMem inMem outMem
         21 -> do
             let rValue = regs ! rd
-            let dMem' = Map.insert addr rValue dMem
+            let dMem' = insert addr rValue dMem
             Right $ CPU regs iMem dMem' inMem outMem
         _ -> Left $ "Invalid operation with opcode" ++ show opcode
 
@@ -105,10 +108,10 @@ execute cpu@(CPU regs iMem dMem inMem outMem) operation@(MemoryMemory opcode rd 
     case opcode of
         22 -> do
             let inValue = inMem ! addr
-            let dMem' = Map.insert rAddr inValue dMem
+            let dMem' = insert rAddr inValue dMem
             Right $ CPU regs iMem dMem' inMem outMem
         23 -> do
             let outValue = dMem ! addr
-            let outMem' = Map.insert rAddr outValue outMem
+            let outMem' = insert rAddr outValue outMem
             Right $ CPU regs iMem dMem inMem outMem'
         _ -> Left $ "Invalid operation with opcode" ++ show opcode

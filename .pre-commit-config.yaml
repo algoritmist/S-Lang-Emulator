@@ -17,5 +17,11 @@ repos:
       description: This hook runs golden tests before commit
       language: system
       pass_filenames: false
-      entry: cabal run Emulator-test
+      entry: cabal run Golden-tests
+    - id: golden-test
+      name: Run unit tests
+      description: This hook runs golden tests before commit
+      language: system
+      pass_filenames: false
+      entry: cabal run Unit-tests
 

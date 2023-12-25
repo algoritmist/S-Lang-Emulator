@@ -3,6 +3,7 @@ import qualified Data.ByteString.Lazy.UTF8 as BLU
 import           System.FilePath           (replaceExtension, takeBaseName)
 import           Test.Tasty                (TestTree, defaultMain, testGroup)
 import           Test.Tasty.Golden         (findByExtension, goldenVsString)
+
 main :: IO ()
 main = defaultMain =<< goldenTests
 
