@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 module ISA where
 
 type Name = String

@@ -64,6 +64,10 @@ postExecute (CPU regs iMem dMem inMem outMem) =
 
 execute :: CPU -> ISA.Instruction -> Either String CPU
 execute cpu ISA.Nop = Right cpu
+execute cpu (ISA.Jump _ rd imm) = do
+    let alu = (regs cpu ! rd) + imm
+    let regs' = insert ISA.pc (alu + regs cpu ! ISA.pc) $ regs cpu
+    Right cpu{regs = regs'}
 
 execute (CPU regs iMem dMem inMem outMem) (ISA.MathOp opcode rd rs1 rs2 _) = do
     op <- case opcode of
@@ -83,9 +87,8 @@ execute (CPU regs iMem dMem inMem outMem) (ISA.Branch opcode _ rs1 rs2 imm) = do
         6 -> Right (>)
         7 -> Right (<)
         _ -> Left $ "Error: No branch instruction with opcode " ++ show opcode
-    let alu = (regs ! rs1) `op` (regs ! rs2)
     let pc = regs ! ISA.pc
-    let regs' = insert ISA.pc (pc + imm) regs
+    let regs' = if (regs ! rs1) `op` (regs ! rs2) then insert ISA.pc (pc + imm) regs else regs
     Right $ CPU regs' iMem dMem inMem outMem
 
 execute (CPU regs iMem dMem inMem outMem) (ISA.MathImmideate opcode rd rs1 imm) = do
