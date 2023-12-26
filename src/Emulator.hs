@@ -33,6 +33,10 @@ initDefault =
         outMem = fromList $ take maxOutMem generator
     in CPU regs iMem dMem inMem outMem
 
+initWithInMem :: [Int] -> CPU
+initWithInMem inMem = initDefault{inMem = fromList $ zip (iterate (+1) 0) inMem}
+
+
 emulate :: CPU -> IO ()
 emulate cpu@CPU{regs, iMem} = do
     let pc = regs ! ISA.pc
@@ -46,7 +50,7 @@ emulate cpu@CPU{regs, iMem} = do
             emulate cpu''
 
 postExecute :: CPU -> CPU
-postExecute cpu@(CPU regs iMem dMem inMem outMem) =
+postExecute (CPU regs iMem dMem inMem outMem) =
     let
         pc = regs ! ISA.pc
         regs' = insert ISA.pc (pc + 4) regs
@@ -54,7 +58,7 @@ postExecute cpu@(CPU regs iMem dMem inMem outMem) =
         CPU regs' iMem dMem inMem outMem
 
 execute :: CPU -> Instruction -> Either String CPU
-execute (CPU regs iMem dMem inMem outMem) operator@(MathOp opcode rd rs1 rs2 _) = do
+execute (CPU regs iMem dMem inMem outMem) (MathOp opcode rd rs1 rs2 _) = do
     op <- case opcode of
         0 -> Right (+)
         1 -> Right (-)
@@ -65,7 +69,7 @@ execute (CPU regs iMem dMem inMem outMem) operator@(MathOp opcode rd rs1 rs2 _) 
     let regs' = insert rd alu regs
     Right $ CPU regs' iMem dMem inMem outMem
 
-execute cpu@(CPU regs iMem dMem inMem outMem) branch@(Branch opcode _ rs1 rs2 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (Branch opcode _ rs1 rs2 imm) = do
     op <- case opcode of
         4 -> Right (==)
         5 -> Right (/=)
@@ -77,7 +81,7 @@ execute cpu@(CPU regs iMem dMem inMem outMem) branch@(Branch opcode _ rs1 rs2 im
     let regs' = insert ISA.pc (pc + imm) regs
     Right $ CPU regs' iMem dMem inMem outMem
 
-execute cpu@(CPU regs iMem dMem inMem outMem) oparator@(MathImmideate opcode rd rs1 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (MathImmideate opcode rd rs1 imm) = do
     op <- case opcode of
         16 -> Right (+)
         17 -> Right (-)
@@ -89,7 +93,7 @@ execute cpu@(CPU regs iMem dMem inMem outMem) oparator@(MathImmideate opcode rd 
     let regs' = insert rd alu regs
     Right $ CPU regs' iMem dMem inMem outMem
 
-execute cpu@(CPU regs iMem dMem inMem outMem) operation@(RegisterMemory opcode rd rs1 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (RegisterMemory opcode rd rs1 imm) = do
     let addr = regs ! rs1 + imm
     case opcode of
         20 -> do
@@ -102,7 +106,7 @@ execute cpu@(CPU regs iMem dMem inMem outMem) operation@(RegisterMemory opcode r
             Right $ CPU regs iMem dMem' inMem outMem
         _ -> Left $ "Invalid operation with opcode" ++ show opcode
 
-execute cpu@(CPU regs iMem dMem inMem outMem) operation@(MemoryMemory opcode rd rs1 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (MemoryMemory opcode rd rs1 imm) = do
     let rAddr = regs ! rd
     let addr = regs ! rs1 + imm
     case opcode of

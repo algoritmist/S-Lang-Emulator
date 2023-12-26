@@ -7,7 +7,8 @@ data Register =
     Argument Name |
     Saved Name |
     Temprorary Name |
-    Special Name deriving(Show, Ord, Eq)
+    Special Name
+    deriving(Show, Ord, Eq)
 
 zero = Zero "x0"
 ra = Special "ra"
@@ -50,29 +51,46 @@ data Instruction =
     deriving(Show)
 
 -- R-R instructions
+add :: Rd -> Rs1 -> Rs2 -> Instruction
 add rd rs1 rs2 = MathOp 0 rd rs1 rs2 0
+sub :: Rd -> Rs1 -> Rs2 -> Instruction
 sub rd rs1 rs2 = MathOp 1 rd rs1 rs2 0
+mul :: Rd -> Rs1 -> Rs2 -> Instruction
 mul rd rs1 rs2 = MathOp 2 rd rs1 rs2 0
+div :: Rd -> Rs1 -> Rs2 -> Instruction
 div rd rs1 rs2 = MathOp 3 rd rs1 rs2 0
 -- Branch instructions
+je :: Rs1 -> Rs2 -> Imm -> Instruction
 je = Branch 4 pc -- if(@rs1 == @rs2) pc <- pc + imm
+jne :: Rs1 -> Rs2 -> Imm -> Instruction
 jne = Branch 5 pc
+jg :: Rs1 -> Rs2 -> Imm -> Instruction
 jg = Branch 6 pc
+jl :: Rs1 -> Rs2 -> Imm -> Instruction
 jl = Branch 7 pc
+jmp :: Rd -> Imm -> Instruction
 jmp = Jump 8
 
 -- R-I instructions
+addI :: Rd -> Rs1 -> Imm -> Instruction
 addI = MathImmideate 16
+subI :: Rd -> Rs1 -> Imm -> Instruction
 subI = MathImmideate 17
+mulI :: Rd -> Rs1 -> Imm -> Instruction
 mulI = MathImmideate 18
+divI :: Rd -> Rs1 -> Imm -> Instruction
 divI = MathImmideate 19
 
 -- R-M instructions
+lwm :: Rd -> Rs1 -> Imm -> Instruction
 lwm = RegisterMemory 20
+swm :: Rd -> Rs1 -> Imm -> Instruction
 swm = RegisterMemory 21
 
 -- M-M instructions
+lwi :: Rd -> Rs1 -> Imm -> Instruction
 lwi = MemoryMemory 22
+swo :: Rd -> Rs1 -> Imm -> Instruction
 swo = MemoryMemory 23
 
 -- Pseudo instructions
