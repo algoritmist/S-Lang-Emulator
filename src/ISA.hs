@@ -10,18 +10,31 @@ data Register =
     Special Name
     deriving(Show, Ord, Eq)
 
+zero :: Register
 zero = Zero "x0"
+ra :: Register
 ra = Special "ra"
+pc :: Register
 pc = Special "pc"
+sp :: Register
 sp = Special "sp"
+a0 :: Register
 a0 = Argument "a0"
+a1 :: Register
 a1 = Argument "a1"
+a2 :: Register
 a2 = Argument "a2"
+s0 :: Register
 s0 = Saved "s0"
+s1 :: Register
 s1 = Saved "s1"
+s2 :: Register
 s2 = Saved "s2"
+t0 :: Register
 t0 = Saved "t0"
+t1 :: Register
 t1 = Saved "t1"
+t2 :: Register
 t2 = Saved "t2"
 
 registers :: [Register]

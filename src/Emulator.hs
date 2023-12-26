@@ -3,18 +3,23 @@
 
 module Emulator where
 import           Data.Map (Map, fromList, insert, (!))
-import           ISA
+import qualified ISA
 
+maxDMem :: Int
 maxDMem = 4096
+maxIMem :: Int
 maxIMem = 4096
+maxInMem :: Int
 maxInMem = 16
+maxOutMem :: Int
 maxOutMem = 16
 
+invalidRegister :: Either String b
 invalidRegister = Left "Error: invalid register"
 
 data CPU = CPU{
-    regs   :: Map Register Int,
-    iMem   :: Map Int Instruction,
+    regs   :: Map ISA.Register Int,
+    iMem   :: Map Int ISA.Instruction,
     dMem   :: Map Int Int,
     inMem  :: Map Int Int,
     outMem :: Map Int Int
@@ -26,15 +31,15 @@ initDefault :: CPU
 initDefault =
     let
         generator = map (, 0) (iterate (+ 1) 0)
-        regs = fromList $ map (, 0) registers
-        iMem = fromList $ take maxIMem $  map (, Nop) (iterate (+ 1) 0)
+        regs = fromList $ map (, 0) ISA.registers
+        iMem = fromList $ take maxIMem $  map (, ISA.Nop) (iterate (+ 1) 0)
         dMem = fromList  $ take maxDMem generator
         inMem = fromList $ take maxInMem generator
         outMem = fromList $ take maxOutMem generator
     in CPU regs iMem dMem inMem outMem
 
 initWithInMem :: [Int] -> CPU
-initWithInMem inMem = initDefault{inMem = fromList $ zip (iterate (+1) 0) inMem}
+initWithInMem inMem = initDefault{inMem = fromList $ zip (iterate (+1) 0)   inMem}
 
 
 emulate :: CPU -> IO ()
@@ -57,8 +62,10 @@ postExecute (CPU regs iMem dMem inMem outMem) =
     in
         CPU regs' iMem dMem inMem outMem
 
-execute :: CPU -> Instruction -> Either String CPU
-execute (CPU regs iMem dMem inMem outMem) (MathOp opcode rd rs1 rs2 _) = do
+execute :: CPU -> ISA.Instruction -> Either String CPU
+execute cpu ISA.Nop = Right cpu
+
+execute (CPU regs iMem dMem inMem outMem) (ISA.MathOp opcode rd rs1 rs2 _) = do
     op <- case opcode of
         0 -> Right (+)
         1 -> Right (-)
@@ -69,7 +76,7 @@ execute (CPU regs iMem dMem inMem outMem) (MathOp opcode rd rs1 rs2 _) = do
     let regs' = insert rd alu regs
     Right $ CPU regs' iMem dMem inMem outMem
 
-execute (CPU regs iMem dMem inMem outMem) (Branch opcode _ rs1 rs2 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (ISA.Branch opcode _ rs1 rs2 imm) = do
     op <- case opcode of
         4 -> Right (==)
         5 -> Right (/=)
@@ -81,7 +88,7 @@ execute (CPU regs iMem dMem inMem outMem) (Branch opcode _ rs1 rs2 imm) = do
     let regs' = insert ISA.pc (pc + imm) regs
     Right $ CPU regs' iMem dMem inMem outMem
 
-execute (CPU regs iMem dMem inMem outMem) (MathImmideate opcode rd rs1 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (ISA.MathImmideate opcode rd rs1 imm) = do
     op <- case opcode of
         16 -> Right (+)
         17 -> Right (-)
@@ -93,7 +100,7 @@ execute (CPU regs iMem dMem inMem outMem) (MathImmideate opcode rd rs1 imm) = do
     let regs' = insert rd alu regs
     Right $ CPU regs' iMem dMem inMem outMem
 
-execute (CPU regs iMem dMem inMem outMem) (RegisterMemory opcode rd rs1 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (ISA.RegisterMemory opcode rd rs1 imm) = do
     let addr = regs ! rs1 + imm
     case opcode of
         20 -> do
@@ -106,7 +113,7 @@ execute (CPU regs iMem dMem inMem outMem) (RegisterMemory opcode rd rs1 imm) = d
             Right $ CPU regs iMem dMem' inMem outMem
         _ -> Left $ "Invalid operation with opcode" ++ show opcode
 
-execute (CPU regs iMem dMem inMem outMem) (MemoryMemory opcode rd rs1 imm) = do
+execute (CPU regs iMem dMem inMem outMem) (ISA.MemoryMemory opcode rd rs1 imm) = do
     let rAddr = regs ! rd
     let addr = regs ! rs1 + imm
     case opcode of
