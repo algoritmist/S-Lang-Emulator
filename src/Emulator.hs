@@ -1,7 +1,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE TupleSections  #-}
 
-module Emulator where
+module Emulator(CPU(regs, iMem, dMem, inMem, outMem), initDefault, initWithInMem, execute, emulate) where
 import           Data.Map (Map, fromList, insert, (!))
 import qualified ISA
 
@@ -13,9 +13,6 @@ maxInMem :: Int
 maxInMem = 16
 maxOutMem :: Int
 maxOutMem = 16
-
-invalidRegister :: Either String b
-invalidRegister = Left "Error: invalid register"
 
 data CPU = CPU{
     regs   :: Map ISA.Register Int,
