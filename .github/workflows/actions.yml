@@ -25,5 +25,7 @@ jobs:
           fail-on: warning
       - name: Build
         run: cabal build
-      - name: Test
-        run: cabal run Emulator-test
+      - name: Unit-tests
+        run: cabal run Unit-tests
+      - name: Golden-tests
+        run: cabal run Golden-tests
