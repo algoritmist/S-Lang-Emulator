@@ -68,6 +68,15 @@ testLWI = TestCase $ assertEqual "data[4] = 42, t1 <- @data[4]" (Right 42) $
             Right cpu' -> Right $ dMem cpu' ! 0
             Left err   -> Left err
 
+testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" (Right 42) $
+    let
+        result = do
+            cpu' <- execute cpu (addI t1 t1 4)
+            execute cpu' (jmp t1 38)
+    in
+        case result of
+            Right cpu' -> Right $ regs cpu' ! pc
+            Left err   -> Left err
 
 tests = TestList [
     TestLabel "Test AddI" testAddI,
@@ -75,7 +84,8 @@ tests = TestList [
     TestLabel "Test SWM" testSWM,
     TestLabel "Test LWM" testLWM,
     TestLabel "Test SWO" testSWO,
-    TestLabel "Test LWI" testLWI
+    TestLabel "Test LWI" testLWI,
+    TestLabel "Test Jump" testJump
     ]
 
 main :: IO Counts
