@@ -83,7 +83,7 @@ jg = Branch 6 pc
 jl :: Rs1 -> Rs2 -> Imm -> Instruction
 jl = Branch 7 pc
 jmp :: Rd -> Imm -> Instruction
-jmp = Jump 8
+jmp = Jump 31
 
 -- R-I instructions
 addI :: Rd -> Rs1 -> Imm -> Instruction
