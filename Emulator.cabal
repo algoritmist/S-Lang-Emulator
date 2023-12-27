@@ -21,11 +21,13 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/Emulator
+  location: https://github.com/algoritmist/Emulator
 
 library
   exposed-modules:
       Lib
+      , Emulator
+      , ISA
   other-modules:
       Paths_Emulator
   autogen-modules:
@@ -35,6 +37,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 executable Emulator-exe
@@ -51,17 +54,36 @@ executable Emulator-exe
     , base >=4.7 && <5
   default-language: Haskell2010
 
-test-suite Emulator-test
+test-suite Golden-tests
   type: exitcode-stdio-1.0
-  main-is: Spec.hs
+  main-is: Golden.hs
   other-modules:
       Paths_Emulator
   autogen-modules:
       Paths_Emulator
   hs-source-dirs:
-      test
+      test/golden
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Emulator
+    , tasty-golden >=2.3
+    , tasty, bytestring
+    , filepath
+    , utf8-string
+    , base >=4.7 && <5
+test-suite Unit-tests
+  type: exitcode-stdio-1.0
+  main-is: EmulatorTest.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      test/unit
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , containers
+    , HUnit >= 1.6
     , base >=4.7 && <5
   default-language: Haskell2010
