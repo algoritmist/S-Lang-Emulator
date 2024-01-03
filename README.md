@@ -1,26 +1,28 @@
 # Slang-Emulator
 Выполнил: Баранов Вячеслав Григорьевич, 335185
 
-Вариант: miranda | risc | harv | hw | instr | struct | stream | port | pstr | prob5
+Вариант: miranda | risc | harv | hw | instr | struct | stream | port | pstr | prob5 | pipeline
 ## Язык программирования
 ```Slang``` &ndash; это упрощенный функциональный язык программирования, похожий на Miranda и имеющий небольшие синтаксические отличия.
 Так как язык содержит немало конструкций, я решил привести его описание в виде БНФ с синтаксическим сахаром
 
 ```Haskell
 Program ::= [FunctionDefinition]
-FunctionDefinition ::= FunctionName "(" DefinitionArgs ")" Expr
+FunctionDefinition ::= FunctionName "(" DefinitionArgs ")" "=" Expr
+VariableDefinition ::= VariableName "=" Expr
 DefinitionArgs ::= (Variable)
-Expr ::= "(" Expr ")" | FunctionCall | LetExpr | IfThenElseExpr | BinOp Variable Variable | UnOp Variable | Variable | Primitive
+Expr ::= "(" Expr ")" | FunctionCall | LetExpr | IfThenElseExpr | BinOp Expr Expr | UnOp Expr | Primitive
 FunctionCall ::= FunctionName CallArgs
-LetExpr ::= "let" [Expr] "in" Expr
+LetExpr ::= "let" [VariableDefinition] "in" VariableDefinition
 IfThenElseExpr ::= "if" Expr "then" [Expr] | "if" Expr "then" [Expr] "else" [Expr]
 BinOp ::= + | - | * | / | == | > | < | /= | ++
 UnOp ::= - | not | head | tail
 CallArgs ::= (Expr)
 FunctionName ::= Name
+VariableName ::= Name
 Variable ::= Name
 Name ::= UTF8-String
-Primitive :: = Int | String | List | Bool
+Primitive ::= Int | String | List | Bool
 ```
 где
 ```Haskell
@@ -34,8 +36,8 @@ Cтоит отметить, что язык не поддерживает patter
 Модель памяти процессора:
 1. Память команд. Машинное слово &ndash; 32 бита. Линейное адресное пространство. Реализуется как Map* Int Instruction**
 2. Память данных. Машинное слово &ndash; 32 бита. Линейное адресное пространсвто. Реализуется как Map Int Int
-3. Порт ввода. Машинное слово &ndash; 32 бита. В него умещаются 4 utf-8 символа. Линейное адресное пространство. Реализуется как Map Int Int
-4. Порт вывода. Машинное слово &ndash; 32 бита. В него умещаются 4 utf-8 символа. Линейное адресное пространство. Реализуется как Map Int Int
+3. Порт ввода. Машинное слово &ndash; 32 бита. В него умещаются 4 ascii символа. Линейное адресное пространство. Реализуется как Map Int Int
+4. Порт вывода. Машинное слово &ndash; 32 бита. В него умещаются 4 ascii символа. Линейное адресное пространство. Реализуется как Map Int Int
 
 *Я предпочел Data.Map обычным спискам Haskell ввиду удобства (и как не странно эффективности).
 
