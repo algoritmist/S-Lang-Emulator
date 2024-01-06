@@ -80,3 +80,19 @@ tail:
         add a0 t3 zero
         addI dr dr 4
         ret
+
+# takes a0 as address of string and returns a0 as int
+toInt:
+    lwm t0 a0 0
+    add a1 a1 zero
+    _loop:
+        jel t0 zero _end
+        addI a0 a0 4
+        lwm tr a0 0
+        subI tr tr 48
+        mulI a1 a1 10
+        add a1 a1 tr
+        jumpl _loop
+    _end:
+        add a0 a1 zero
+        ret
