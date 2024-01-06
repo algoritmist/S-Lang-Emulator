@@ -11,6 +11,7 @@ input:
         jumpl _loop
     _end:
         add a0 a1 zero
+        addI dr dr 4
         ret
 
 # takes a0 as address of list in memory
@@ -24,11 +25,12 @@ output:
         subI t0 t0 4
         jumpl _loop
     _end:
+        addI dr dr 4
         ret
 
 # takes (a0, a1) as addresses of (list1, list2)
 addLists:
-    add s0 dr zero # address of l3
+    add t3 dr zero # address of l3
     lwm t0 a0 0 # size of l1
     lwm t1 a1 0 # size of l2
     add t2 t0 t1 # size of |l1|+|l2|
@@ -36,19 +38,19 @@ addLists:
     _loop1:
         jel t0 zero _loop2
         addI dr dr 4
-        addI t0 t0 4
-        lwm tr t0 0
+        addI a0 a0 4
+        lwm tr a0 0
         swm tr dr 0
         subI t0 t0 4
         jumpl _loop1
     _loop2:
         jel t1 zero _end
         addI dr dr 4
-        addI t1 t1 4
-        lwm tr t1 0
+        addI a1 a1 4
+        lwm tr a1 0
         swm tr dr 0
         subI t1 t1 4
         jumpl _loop2
     _end:
-        add a0 s0 zero
+        add a0 t3 zero
         ret
