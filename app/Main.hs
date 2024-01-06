@@ -32,5 +32,5 @@ main = do
                 let (cpus, code) = Emulator.emulate cpu
                 let outCpus = concatMap (\x -> show x ++ "\n") cpus
                 writeFile outputFile $ outCpus ++ show code ++ "\n"
-                --print $ dMem $ last cpus
+                print $ dMem $ last cpus
                 print $ map chr $ elems.outMem $ last cpus

@@ -6,5 +6,6 @@ main:
     call input
     add a1 s1 zero
     call addLists
+    call tail
     call output
     halt

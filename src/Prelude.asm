@@ -53,4 +53,30 @@ addLists:
         jumpl _loop2
     _end:
         add a0 t3 zero
+        addI dr dr 4
+        ret
+
+# takes a0 as address of list and returns a0 as first element of list. List should be valid
+head:
+    lwm a0 a0 4
+    ret
+
+# takes a0 as address of list and returns a0 as address of new list
+tail:
+    add t3 dr zero
+    lwm t0 a0 0
+    addI a0 a0 4
+    subI t0 t0 4
+    swm t0 dr 0
+    _loop:
+        jel t0 zero _end
+        addI a0 a0 4
+        addI dr dr 4
+        lwm tr a0 0
+        swm tr dr 0
+        subI t0 t0 4
+        jumpl _loop
+    _end:
+        add a0 t3 zero
+        addI dr dr 4
         ret
