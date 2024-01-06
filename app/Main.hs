@@ -30,5 +30,5 @@ main = do
                 let cpu = Emulator.setInMem (Emulator.setIstructionMem (Emulator.setDataMem Emulator.initDefault dMemory) instructionMemory) inMemory
                 let (cpus, code) = Emulator.emulate cpu
                 let outCpus = concatMap (\x -> show x ++ "\n") cpus
-                writeFile outputFile $ outCpus ++ showcode ++ "\n"
+                writeFile outputFile $ outCpus ++ show code ++ "\n"
                 print $ outMem $ last cpus
