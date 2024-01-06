@@ -1,9 +1,12 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE TupleSections  #-}
 
-module Emulator(CPU(regs, iMem, dMem, inMem, outMem), initDefault, initWithInMem, execute, emulate) where
-import           Data.Map (Map, fromList, insert, (!))
+module Emulator(CPU(regs, iMem, dMem, inMem, outMem), initDefault, setInMem, setDataMem, setIstructionMem, execute, emulate) where
+import           Data.Map (Map, elems, fromList, insert, size, (!))
+import           Data.Map as Map (lookup)
 import qualified ISA
+
+type ExitCode = String
 
 maxDMem :: Int
 maxDMem = 4096
@@ -20,46 +23,60 @@ data CPU = CPU{
     dMem   :: Map Int Int,
     inMem  :: Map Int Int,
     outMem :: Map Int Int
-    } deriving(Show)
+    } deriving(Eq)
 
-
+instance Show CPU where
+    show (CPU{regs, dMem}) = "CPU{regs: " ++ show regs ++ "}"
 
 initDefault :: CPU
 initDefault =
     let
-        generator = map (, 0) (iterate (+ 1) 0)
-        regs = fromList $ map (, 0) ISA.registers
-        iMem = fromList $ take maxIMem $  map (, ISA.Nop) (iterate (+ 1) 0)
+        generator = map (, 0) (iterate (+ 4) 0)
+        regs' = fromList $ map (, 0) ISA.registers
+        regs = insert ISA.sp (maxDMem - 4) regs'
+        iMem = fromList $ take maxIMem $  map (, ISA.Nop) (iterate (+ 4) 0)
         dMem = fromList  $ take maxDMem generator
         inMem = fromList $ take maxInMem generator
         outMem = fromList $ take maxOutMem generator
     in CPU regs iMem dMem inMem outMem
 
-initWithInMem :: [Int] -> CPU
-initWithInMem inMem = initDefault{inMem = fromList $ zip (iterate (+1) 0)   inMem}
+setInMem :: CPU -> [Int] -> CPU
+setInMem cpu inMem = cpu{inMem = fromList $ zip (iterate (+ 4) 0)   inMem}
+
+setIstructionMem :: CPU -> [ISA.Instruction] -> CPU
+setIstructionMem cpu iMem = cpu{iMem = fromList $ zip (iterate (+ 4) 0)   iMem}
+
+setDataMem :: CPU -> [Int] -> CPU
+setDataMem cpu dataMem = cpu{dMem = fromList $ zip (iterate (+ 4) 0)   dataMem}
 
 
-emulate :: CPU -> IO ()
-emulate cpu@CPU{regs, iMem} = do
-    let pc = regs ! ISA.pc
-    let instruction = iMem ! pc
-    let result = execute cpu instruction
-    case result of
-        Left err -> fail err
-        Right cpu' -> do
-            let cpu'' = postExecute cpu'
-            print cpu''
-            emulate cpu''
+emulate :: CPU -> ([CPU], ExitCode)
+emulate cpu@CPU{regs, iMem} =
+    let
+        pc = regs ! ISA.pc
+        instruction' = Map.lookup pc iMem
+        result = case instruction' of
+            Nothing          -> Left $ "no instruction at address " ++ show pc
+            Just instruction -> execute cpu instruction
+    in
+        case result of
+            Left err -> ([cpu], err)
+            Right cpu' ->
+                let
+                    (cpus, result) = emulate $ postExecute cpu'
+                in
+                    (cpu : cpus, result)
 
 postExecute :: CPU -> CPU
 postExecute (CPU regs iMem dMem inMem outMem) =
     let
         pc = regs ! ISA.pc
-        regs' = insert ISA.pc (pc + 4) regs
+        regs' = insert ISA.pc ((pc + 4) `mod` (4 * size iMem)) regs
     in
         CPU regs' iMem dMem inMem outMem
 
 execute :: CPU -> ISA.Instruction -> Either String CPU
+execute cpu ISA.Halt = Left "Halt: stopping execution"
 execute cpu ISA.Nop = Right cpu
 execute cpu (ISA.Jump _ rd imm) = do
     let alu = (regs cpu ! rd) + imm
@@ -126,3 +143,5 @@ execute (CPU regs iMem dMem inMem outMem) (ISA.MemoryMemory opcode rd rs1 imm) =
             let outMem' = insert rAddr outValue outMem
             Right $ CPU regs iMem dMem inMem outMem'
         _ -> Left $ "Invalid operation with opcode" ++ show opcode
+
+execute _ _ = Left "cant execute pseudo instructions"

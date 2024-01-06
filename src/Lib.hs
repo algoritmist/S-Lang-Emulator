@@ -1,6 +1,10 @@
 module Lib
-    ( someFunc
+    ( program, convert
     ) where
+import qualified Converter
+import qualified Parser
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+program = Parser.program
+convert result = case result of
+    Left err   -> Left err
+    Right prog -> Right $ Converter.toReal prog

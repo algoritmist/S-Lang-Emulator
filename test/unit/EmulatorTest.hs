@@ -1,4 +1,5 @@
-import           Data.Map   ((!))
+module EmulatorTest(tests) where
+import           Data.Map   (fromList, (!))
 import           Emulator
 import           ISA
 import           Test.HUnit
@@ -58,15 +59,15 @@ testSWO = TestCase $ assertEqual "data[4] = 42, out[4] = @data[4]" (Right 42) $
             Right cpu' -> Right $ outMem cpu' ! 4
             Left err   -> Left err
 
-testLWI = TestCase $ assertEqual "data[4] = 42, t1 <- @data[4]" (Right 42) $
+testLWI = TestCase $ assertEqual "data[16] = 42, t1 <- @data[16]" (Right 42) $
     let
-        cpu = Emulator.initWithInMem [-1, 2, 9, 128, 42, 15]
+        cpu' = Emulator.setInMem cpu [-1, 2, 9, 128, 42, 15]
         result = do
-            execute cpu (lwi zero zero 4)
+            execute cpu' (lwi zero zero 16)
     in
         case result of
-            Right cpu' -> Right $ dMem cpu' ! 0
-            Left err   -> Left err
+            Right cpu'' -> Right $ dMem cpu'' ! 0
+            Left err    -> Left err
 
 testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" (Right 42) $
     let
@@ -78,15 +79,13 @@ testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" (Right 4
             Right cpu' -> Right $ regs cpu' ! pc
             Left err   -> Left err
 
-tests = TestList [
-    TestLabel "Test AddI" testAddI,
-    TestLabel "Test Mul" testMul,
-    TestLabel "Test SWM" testSWM,
-    TestLabel "Test LWM" testLWM,
-    TestLabel "Test SWO" testSWO,
-    TestLabel "Test LWI" testLWI,
-    TestLabel "Test Jump" testJump
+tests =
+    [
+        TestLabel "Test AddI" testAddI,
+        TestLabel "Test Mul" testMul,
+        TestLabel "Test SWM" testSWM,
+        TestLabel "Test LWM" testLWM,
+        TestLabel "Test SWO" testSWO,
+        TestLabel "Test LWI" testLWI,
+        TestLabel "Test Jump" testJump
     ]
-
-main :: IO Counts
-main = runTestTT tests

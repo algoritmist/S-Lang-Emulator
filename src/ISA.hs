@@ -1,45 +1,62 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 module ISA where
+import           Data.List (find)
 
 type Name = String
 
-data Register =
-    Zero Name |
-    Argument Name |
-    Saved Name |
-    Temprorary Name |
-    Special Name
-    deriving(Show, Ord, Eq)
+data Register = Register{rType :: RegisterType, name :: Name} deriving(Ord, Eq)
+data RegisterType = Special | Zero | Argument | Saved | Temporary deriving(Ord, Eq)
+
+
+instance Show Register where
+    show = name
 
 zero :: Register
-zero = Zero "x0"
+zero = Register Zero "zero"
 ra :: Register
-ra = Special "ra"
+ra = Register Special "ra"
+rin :: Register
+rin = Register Special "rin"
+dr :: Register
+dr = Register Special "dr"
 pc :: Register
-pc = Special "pc"
+pc = Register Special "pc"
 sp :: Register
-sp = Special "sp"
+sp = Register Special "sp"
 a0 :: Register
-a0 = Argument "a0"
+a0 = Register Argument "a0"
 a1 :: Register
-a1 = Argument "a1"
+a1 = Register Argument "a1"
 a2 :: Register
-a2 = Argument "a2"
+a2 = Register Argument "a2"
 s0 :: Register
-s0 = Saved "s0"
+s0 = Register Saved "s0"
 s1 :: Register
-s1 = Saved "s1"
+s1 = Register Saved "s1"
 s2 :: Register
-s2 = Saved "s2"
+s2 = Register Saved "s2"
 t0 :: Register
-t0 = Saved "t0"
+t0 = Register Temporary "t0"
 t1 :: Register
-t1 = Saved "t1"
+t1 = Register Temporary "t1"
 t2 :: Register
-t2 = Saved "t2"
+t2 = Register Temporary "t2"
+t3 :: Register
+t3 = Register Temporary "t3"
+rout :: Register
+rout = Register Special "rout"
+tr :: Register
+tr = Register Special "tr"
+jp :: Register
+jp = Register Special "jp"
 
 registers :: [Register]
-registers = [zero, ra, pc, sp, a0, a1, a2, s0, s1, s2, t0, t1, t2]
+registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, jp]
+
+toReg :: String -> Register
+toReg s = case find (\r -> name r == s) registers of
+    Just reg -> reg
+    _        -> error "Register does not exist"
 
 
 type Opcode = Int
@@ -47,6 +64,7 @@ type Rd = Register
 type Rs1 = Register
 type Rs2 = Register
 type Imm = Int
+type LabelName = String
 
 {-
 I-type: imm - 12 bit signed, rs2 - 5 bit, rs1 - 5 bit, rd - 5 bit, opcode - 5 bit
@@ -61,8 +79,14 @@ data Instruction =
     MemoryMemory Opcode Rd Rs1 Imm |
     MathImmideate Opcode Rd Rs1 Imm |
     Jump Opcode Rd Imm |
-    Nop
-    deriving(Show)
+    Nop |
+    Halt |
+    Label Name |
+    PseudoBranch Opcode Rd Rs1 Rs2 LabelName |
+    PseudoJump Opcode LabelName |
+    PseudoCall Rd Imm |
+    PseudoLabelCall LabelName
+    deriving(Show, Eq)
 
 -- R-R instructions
 add :: Rd -> Rs1 -> Rs2 -> Instruction
@@ -109,12 +133,24 @@ swo = MemoryMemory 23
 
 -- Pseudo instructions
 push :: Register -> [Instruction]
-push rs = [addI sp sp 4, swm sp rs 0]
+push rs = [swm rs sp 0, subI sp sp 4]
 pop :: Register -> [Instruction]
-pop rd = [lwm rd sp 0, subI sp sp 4]
-ret :: [Instruction]
-ret =  jmp ra 0: pop pc  -- pc <- ra + 4, pop ra
+pop rd = [addI sp sp 4, lwm rd sp 0]
+ret :: Instruction
+ret = addI pc ra 4 -- pc <- ra, pop ra
 
 type Offset = Int
 call :: Register -> Offset -> [Instruction]
-call rd imm = add ra pc zero : push ra ++ [jmp rd imm]
+call rd imm =  push ra ++ [add ra pc zero, jmp rd (imm - 12)] ++ pop ra
+
+-- Pseudo branch instructions
+jel :: Rs1 -> Rs2 -> LabelName -> Instruction
+jel = PseudoBranch 4 pc
+jnel :: Rs1 -> Rs2 -> LabelName -> Instruction
+jnel = PseudoBranch 5 pc
+jgl :: Rs1 -> Rs2 -> LabelName -> Instruction
+jgl = PseudoBranch 6 pc
+jll :: Rs1 -> Rs2 -> LabelName -> Instruction
+jll = PseudoBranch 7 pc
+jmpl :: LabelName -> Instruction
+jmpl = PseudoJump 31
