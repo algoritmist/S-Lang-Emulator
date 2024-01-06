@@ -16,12 +16,12 @@ input:
 # takes a0 as address of list in memory
 output:
     lwm t0 a0 0 # size of list
-    swo a0 rout 0
     _loop:
         jel t0 zero _end
         addI a0 a0 4
-        addI rout rout 4
         swo a0 rout 0
+        addI rout rout 4
+        subI t0 t0 4
         jumpl _loop
     _end:
         ret

@@ -139,8 +139,8 @@ execute (CPU regs iMem dMem inMem outMem) (ISA.MemoryMemory opcode rd rs1 imm) =
             let dMem' = insert rAddr inValue dMem
             Right $ CPU regs iMem dMem' inMem outMem
         23 -> do
-            let outValue = dMem ! addr
-            let outMem' = insert rAddr outValue outMem
+            let outValue = dMem ! rAddr
+            let outMem' = insert addr outValue outMem
             Right $ CPU regs iMem dMem inMem outMem'
         _ -> Left $ "Invalid operation with opcode" ++ show opcode
 

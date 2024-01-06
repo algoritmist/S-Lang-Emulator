@@ -1,5 +1,7 @@
 module Main (main) where
 
+import           Data.Char                (chr, ord)
+import           Data.Map                 (elems)
 import           Emulator
 import           Lib
 import           System.Environment.Blank (getArgs)
@@ -21,8 +23,7 @@ main = do
         dContents <- readFile dataFile
         let dMemory = map (\x -> read x :: Int) $ lines dContents
         inContents <- readFile inputFile
-        let inMemory = map (\x -> read x :: Int) $ lines inContents
-
+        let inMemory = map ord inContents
         case instructionMemory' of
             Left err -> print err
             Right instructionMemory -> do
@@ -31,4 +32,4 @@ main = do
                 let (cpus, code) = Emulator.emulate cpu
                 let outCpus = concatMap (\x -> show x ++ "\n") cpus
                 writeFile outputFile $ outCpus ++ show code ++ "\n"
-                print $ outMem $ last cpus
+                print $ map chr $ elems.outMem $ last cpus
