@@ -8,3 +8,4 @@ program = Parser.program
 convert result = case result of
     Left err   -> Left err
     Right prog -> Right $ Converter.toReal prog
+

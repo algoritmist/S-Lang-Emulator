@@ -1,0 +1,1 @@
+main() = output(addLists(input(4), input(4)));

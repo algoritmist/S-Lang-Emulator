@@ -5,14 +5,14 @@ import           Data.List (find)
 type Name = String
 
 data Register = Register{rType :: RegisterType, name :: Name} deriving(Ord, Eq)
-data RegisterType = Special | Zero | Argument | Saved | Temporary deriving(Ord, Eq)
+data RegisterType = Temporary | Argument | Saved | Virtual | Hardwired | Special deriving(Ord, Eq)
 
 
 instance Show Register where
     show = name
 
 zero :: Register
-zero = Register Zero "zero"
+zero = Register Hardwired "zero"
 ra :: Register
 ra = Register Special "ra"
 rin :: Register
@@ -47,11 +47,23 @@ rout :: Register
 rout = Register Special "rout"
 tr :: Register
 tr = Register Special "tr"
-jp :: Register
-jp = Register Special "jp"
+v1 :: Register
+v1 = Register Virtual "v1"
+v2 :: Register
+v2 = Register Virtual "v2"
 
 registers :: [Register]
-registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, jp]
+registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, v1, v2]
+
+argumentRegisters :: [Register]
+argumentRegisters = filter (\r -> rType r == Argument) registers
+
+temporaryRegisters :: [Register]
+temporaryRegisters = filter (\r -> rType r == Temporary) registers
+
+savedRegisters :: [Register]
+savedRegisters = filter (\r -> rType r == Saved) registers
+
 
 toReg :: String -> Register
 toReg s = case find (\r -> name r == s) registers of
@@ -86,7 +98,67 @@ data Instruction =
     PseudoJump Opcode LabelName |
     PseudoCall Rd Imm |
     PseudoLabelCall LabelName
-    deriving(Show, Eq)
+    deriving(Eq)
+
+instance Show Instruction where
+    show(MathOp op rd rs1 rs2 _) = 
+        let 
+            prefix = case op of
+                0 -> "add"
+                1 -> "sub"
+                2 -> "mul"
+                3 -> "div"
+        in
+            prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show rs2
+    show(Branch op _ rs1 rs2 imm) = 
+        let 
+            prefix = case op of
+                4 -> "je"
+                5 -> "jne"
+                6 -> "jg"
+                7 -> "jl"
+        in
+            prefix ++ " "  ++ show rs1 ++ " " ++ show rs2 ++ " " ++ show imm
+    show(MathImmideate op rd rs1 imm) = 
+        let 
+            prefix = case op of
+                16 -> "addI"
+                17 -> "subI"
+                18 -> "mulI"
+                19 -> "divI"
+        in
+            prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
+    show(RegisterMemory op rd rs1 imm) = 
+        let 
+            prefix = case op of
+                20 -> "lwm"
+                21 -> "swm"
+        in
+            prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
+
+    show(MemoryMemory op rd rs1 imm) = 
+        let 
+            prefix = case op of
+                22 -> "lwi"
+                23 -> "swo"
+        in
+            prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
+    show(Jump _ rd imm) = "jump " ++ show rd ++ " " ++ show imm
+    show(Nop) = "nop"
+    show(Halt) = "halt"
+    show(Label name) = name ++ ":"
+    show(PseudoBranch op _ rs1 rs2 label) = 
+        let 
+            prefix = case op of
+                4 -> "jel"
+                5 -> "jnel"
+                6 -> "jgl"
+                7 -> "jll"
+        in
+            prefix ++ " "  ++ show rs1 ++ " " ++ show rs2 ++ " " ++ label
+    show(PseudoJump _ label) = "jumpl " ++ label
+    show(PseudoCall rd imm) = "call " ++ show rd ++ " " ++ show imm
+    show(PseudoLabelCall label) = "call " ++ label
 
 -- R-R instructions
 add :: Rd -> Rs1 -> Rs2 -> Instruction
