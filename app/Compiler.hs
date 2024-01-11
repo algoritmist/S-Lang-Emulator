@@ -1,12 +1,12 @@
 module Main(main) where
-import CompilerLib
+import           SlangLib
 import           System.Environment.Blank (getArgs)
+import           System.FilePath          (replaceExtension, takeBaseName)
 import           System.IO
 import           Text.Parsec.Prim         (parse)
-
 main :: IO ()
 main = do
-    args <- getArgs
+    args <-  getArgs
     if length args /= 1
         then do
             putStrLn "usage: slang-compiler <source_code.sl>"
@@ -17,9 +17,10 @@ main = do
         case result of
             Left err -> print err
             Right program -> do
+                print program
                 let (instructions, dt) = tranlsate program
-                let outBin = file ++ ".asm"
-                let outData = file ++ ".out"
+                let outBin = replaceExtension file ".asm"
+                let outData = replaceExtension file ".dmem"
                 writeFile outBin $ concatMap (\x -> show x ++ "\n") instructions
                 writeFile outData $ concatMap (\x -> show x ++ "\n") dt
 

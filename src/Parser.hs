@@ -24,11 +24,11 @@ identifier = Token.identifier lexer -- parses an identifier
 
 mathOp = string "add" <|> string "sub" <|> string "mul" <|> string "divs"
 mathIOp = string "addI" <|> string "subI" <|> string "mulI" <|> string "divI"
-branchOp = string "je" <|> string "jne" <|> string "jl" <|> string "jg"
+branchOp = try (string "je") <|> try (string "jne") <|> try (string "jl") <|> try (string "jg")
 registerMemoryOp = string "lwm" <|> string "swm"
 memoryMemoryOp = string "lwi" <|> string "swo"
 jumpOp = string "jump"
-pseudoBranchOp = string "jel" <|> string "jnel" <|> string "jll" <|> string "jgl"
+pseudoBranchOp = try (string "jel") <|> try (string "jnel") <|> try (string "jll") <|> try (string "jgl")
 pseudoJumpOp = string "jumpl"
 
 int = fromInteger <$> Token.integer lexer

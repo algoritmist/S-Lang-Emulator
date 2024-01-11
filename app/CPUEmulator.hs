@@ -8,12 +8,15 @@ import           System.Environment.Blank (getArgs)
 import           System.IO
 import           Text.Parsec.Prim         (parse)
 
+maxLines :: Int
+maxLines = 1000
+
 main :: IO ()
 main = do
     args <- getArgs
     if length args /= 4
         then do
-            putStrLn "usage: slang-emulator <instruction_source.asm> <data_source.asm> <input_source.asm> <output_destination.out>"
+            putStrLn "usage: slang-emulator <instruction_source.asm> <data_source.dmem> <input_source.in> <output_destination.out>"
     else do
         let [instructionFile, dataFile, inputFile, outputFile] = args
         let libPath = "src/Prelude.asm"
@@ -27,9 +30,10 @@ main = do
         case instructionMemory' of
             Left err -> print err
             Right instructionMemory -> do
-                --print iMemory
+                --print instructionMemory
                 let cpu = Emulator.setInMem (Emulator.setIstructionMem (Emulator.setDataMem Emulator.initDefault dMemory) instructionMemory) inMemory
                 let (cpus, code) = Emulator.emulate cpu
-                let outCpus = concatMap (\x -> show x ++ "\n") cpus
-                writeFile outputFile $ outCpus ++ show code ++ "\n"
+                let cpus' = take maxLines cpus
+                let outCpus = concatMap (\x -> show x ++ "\n") cpus'
+                writeFile outputFile $ outCpus ++ code ++ "\n"
                 print $ map chr $ elems.outMem $ last cpus

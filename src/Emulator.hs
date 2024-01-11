@@ -2,7 +2,8 @@
 {-# LANGUAGE TupleSections  #-}
 
 module Emulator(CPU(regs, iMem, dMem, inMem, outMem), initDefault, setInMem, setDataMem, setIstructionMem, execute, emulate) where
-import           Data.Map (Map, elems, fromList, insert, size, (!), empty)
+import           Data.Map (Map, assocs, elems, empty, fromList, insert, size,
+                           (!))
 import           Data.Map as Map (lookup)
 import qualified ISA
 
@@ -26,7 +27,7 @@ data CPU = CPU{
     } deriving(Eq)
 
 instance Show CPU where
-    show CPU{regs, dMem} = "CPU{regs: " ++ show regs ++ "}"
+    show CPU{regs, dMem} = "CPU{regs: " ++ show (assocs regs) ++ "}"
 
 initDefault :: CPU
 initDefault =
@@ -47,12 +48,12 @@ setIstructionMem :: CPU -> [ISA.Instruction] -> CPU
 setIstructionMem cpu iMem = cpu{iMem = fromList $ zip (iterate (+ 4) 0)   iMem}
 
 setDataMem :: CPU -> [Int] -> CPU
-setDataMem cpu dataMem = 
+setDataMem cpu dataMem =
     let
         mem = fromList $ zip (iterate (+ 4) 0)   dataMem
         rs = regs cpu
     in
-        cpu{dMem = mem, regs = insert ISA.dr (4 * length mem) rs}
+        cpu{dMem = mem, regs = insert ISA.dr (4 * length dataMem) rs}
 
 
 emulate :: CPU -> ([CPU], ExitCode)
@@ -149,4 +150,4 @@ execute (CPU regs iMem dMem inMem outMem) (ISA.MemoryMemory opcode rd rs1 imm) =
             Right $ CPU regs iMem dMem inMem outMem'
         _ -> Left $ "Invalid operation with opcode" ++ show opcode
 
-execute _ _ = Left "cant execute pseudo instructions"
+execute _ _ = Left "can't execute pseudo instructions"

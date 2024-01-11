@@ -1,5 +1,6 @@
 # takes a0 as size of input and returns a0 as address of string in memory
 input:
+    mulI a0 a0 4
     swm a0 dr 0 # set size of list to @a0
     add a1 dr zero # a1 is the address of char-list in memory
     _loop:

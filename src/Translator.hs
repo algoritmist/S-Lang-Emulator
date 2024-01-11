@@ -1,37 +1,39 @@
-{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE NamedFieldPuns        #-}
 
 
 module Translator where
-import Data.Map(Map, insert, notMember, empty, elems, assocs, fromList, keys)
-import Data.Map as Map(lookup)
-import Language
-import ISA
-import Data.List(sortOn)
-import Data.Char(ord)
+import           Data.Char (ord)
+import           Data.List (sortOn)
+import           Data.Map  (Map, assocs, elems, empty, fromList, insert, keys,
+                            notMember)
+import           Data.Map  as Map (lookup)
+import           ISA
+import           Language
 
 data MemoryMapper = MemoryMapper {variableMap :: Map Variable Register, dataMap :: Map [Int] Int, drPtr :: Int, varCount :: Int, generatedLabels :: Int}
 
 maxArgsError :: Int -> String
-maxArgsError args = "Max number of supported arguments: " ++ show(args)
+maxArgsError args = "Max number of supported arguments: " ++ show args
 undefinedVariable :: Variable -> String
-undefinedVariable var = "No such variable with name " ++ show(var)
+undefinedVariable var = "No such variable with name " ++ show var
 
 initDefault :: MemoryMapper
 initDefault = MemoryMapper empty empty 0 0 0
 
 saveCaller :: MemoryMapper -> [ISA.Instruction]
-saveCaller MemoryMapper{variableMap} = 
+saveCaller MemoryMapper{variableMap} =
     concatMap ISA.push $ filter (\r -> rType r /= Saved && rType r /= Hardwired && rType r /= Special) $ elems variableMap
 
 popCaller :: MemoryMapper -> [ISA.Instruction]
-popCaller MemoryMapper{variableMap} = 
+popCaller MemoryMapper{variableMap} =
     concatMap ISA.pop $ filter (\r -> rType r /= Saved && rType r /= Hardwired && rType r /= Special) $ elems variableMap
 
 moveArgs :: MemoryMapper -> [Variable] -> [ISA.Instruction]
 moveArgs mp vars =
     if length vars <= length ISA.argumentRegisters
-        then map (\(x, y) -> ISA.add x y zero) $ zip ISA.argumentRegisters $ map (getReg mp) vars
+        then zipWith (\x y -> ISA.add x y zero) ISA.argumentRegisters
+    (map (getReg mp) vars)
         else error $ maxArgsError $ length ISA.argumentRegisters
 
 moveA0 :: MemoryMapper -> (MemoryMapper, [ISA.Instruction])
@@ -58,7 +60,7 @@ assocVariable mp var reg = mp{variableMap = insert var reg (variableMap mp)}
 getReg :: MemoryMapper -> Variable -> Register
 getReg MemoryMapper{variableMap} var = case Map.lookup var variableMap of
     Just reg -> reg
-    _ -> error $ undefinedVariable var
+    _        -> error $ undefinedVariable var
 
 allocVariable :: MemoryMapper -> Variable -> MemoryMapper
 allocVariable mp var = allocVariables mp [var]
@@ -68,7 +70,7 @@ allocVariables mp [] = mp
 allocVariables mp vars =
     let
         usedRegs = elems $ variableMap mp
-        regs = take (length vars) $ sortOn rType $ filter (\r -> (not $ elem r usedRegs) && rType r /= Hardwired && rType r /= Special) ISA.registers
+        regs = take (length vars) $ sortOn rType $ filter (\r -> notElem r usedRegs && rType r /= Hardwired && rType r /= Special) ISA.registers
         funct m (v, r) = assocVariable m v r
     in
         foldl funct mp $ zip vars regs
@@ -81,7 +83,7 @@ putList mp lst =
     in
         case Map.lookup lst dMap of
             Just addr -> (mp, addr)
-            _ -> (mp{dataMap = insert lst drValue dMap, drPtr = 4 + drValue + 4 * length lst}, drValue)
+            _ -> (mp{dataMap = insert lst drValue dMap, drPtr = drValue + 4 * length lst}, drValue)
 
 emptyMapping :: MemoryMapper -> MemoryMapper
 emptyMapping mp = mp{variableMap = empty}
@@ -107,12 +109,12 @@ containsVar :: MemoryMapper -> Variable -> Bool
 containsVar MemoryMapper{variableMap} var = elem var $ keys variableMap
 
 translate :: Language.Program -> ([ISA.Instruction], [Int])
-translate program = 
-    let 
+translate program =
+    let
         (mp, instructions) = translateProgram initDefault program
         instructions' = [ISA.PseudoLabelCall "main", ISA.Halt] ++ instructions
     in
-        (instructions', concat $ keys (dataMap mp))
+        (instructions', concatMap fst $ sortOn snd (assocs $ dataMap mp))
 
 translateProgram :: MemoryMapper -> Language.Program -> (MemoryMapper, [ISA.Instruction])
 translateProgram mp [] = (mp, [])
@@ -158,18 +160,18 @@ translateHelper mp (EBinOp op e1 e2) =
     let
         (mp', v1, i1s) = translateHelper mp e1
         (mp'', v2, i2s) = translateHelper mp' e2
-        (mpVar, var) = newVariable mp''
+        (mpVar, var) = newVariable mp
         rd = getReg mpVar var
-        rs1 = getReg mpVar v1
-        rs2 = getReg mpVar v2
+        rs1 = getReg mp'' v1
+        rs2 = getReg mp'' v2
         instr = case op of
             Language.Sum -> ISA.add rd rs1 rs2
             Language.Sub -> ISA.sub rd rs1 rs2
             Language.Mul -> ISA.mul rd rs1 rs2
             Language.Div -> ISA.div rd rs1 rs2
-            _ -> error "only arithmetical operations are supported"
+            _            -> error "only arithmetical operations are supported"
     in
-        (mpVar, var, i1s ++ i2s ++ [instr])
+        (mp''{variableMap = variableMap mpVar}, var, i1s ++ i2s ++ [instr])
 
 translateHelper mp (EIf (EBinOp op e1 e2) (eTrue, eFalse)) =
     let
@@ -181,9 +183,9 @@ translateHelper mp (EIf (EBinOp op e1 e2) (eTrue, eFalse)) =
         r1 = getReg mp5 v1
         r2 = getReg mp5 v2
         instr = case op of
-            Eq -> ISA.jel r1 r2 trueLabel
-            G -> ISA.jgl r1 r2 trueLabel
-            L -> ISA.jll r1 r2 trueLabel
+            Eq   -> ISA.jel r1 r2 trueLabel
+            G    -> ISA.jgl r1 r2 trueLabel
+            L    -> ISA.jll r1 r2 trueLabel
             NotE -> ISA.jnel r1 r2 trueLabel
         (mpFalse, vF, ifs) = translateHelper mp5 eFalse
         rdFalse = getReg mpFalse finalVar
@@ -202,12 +204,12 @@ translateHelper mp (EUnOp op expr) =
         reg = getReg mp' var
         i2s = case op of
             Neg -> [ISA.sub reg zero reg]
-            _ -> error "other unary operators not supported yet"
+            _   -> error "other unary operators not supported yet"
     in
         (mp', var, i1s ++ i2s)
 
 translateHelper mp (EVar name) =
-    if (containsVar mp name) then (mp, name, []) else error $ "No variable with name " ++ name
+    if containsVar mp name then (mp, name, []) else error $ "No variable with name " ++ name
 
 translateHelper mp (EInt x) =
     let
@@ -230,11 +232,10 @@ translateHelper mp (EString s) = translateHelper mp $ EList (map ord s)
 translateHelper mp (ELet [] retExpr) = translateHelper mp retExpr
 translateHelper mp (ELet (VariableDefinition{varName, varExpr} : defs) retExpr) =
     let
-        mp' = allocVariable mp varName
-        rd = getReg mp' varName
-        (mp'', var, i1s) = translateHelper mp varExpr
-        rs = getReg mp'' var
-        i1s' = i1s ++ [ISA.add rd rs zero]
-        (mp''', var', i2s) = translateHelper mp' (ELet defs retExpr)
+        (mp', var, i1s) = translateHelper mp varExpr
+        rs = getReg mp' var
+        mp'' = assocVariable mp' varName rs
+        (mp''', var', i2s) = translateHelper mp'' (ELet defs retExpr)
+        reg = getReg mp''' var'
     in
-        (mp''', var', i1s' ++ i2s)
+        (mp'''{variableMap = insert var' reg (variableMap mp)}, var', i1s ++ i2s)

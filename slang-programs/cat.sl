@@ -1,1 +1,1 @@
-main() = output(addLists(input(4), input(4)));
+main() = output(addLists("Hello, ", input(20)));
