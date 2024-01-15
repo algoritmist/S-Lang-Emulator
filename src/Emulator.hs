@@ -95,6 +95,7 @@ execute (CPU regs iMem dMem inMem outMem) (ISA.MathOp opcode rd rs1 rs2 _) = do
         1 -> Right (-)
         2 -> Right (*)
         3 -> Right Prelude.div
+        8 -> Right Prelude.mod
         _ -> Left $ "Error: No math operation with opcode " ++ show opcode
     let alu = (regs ! rs1) `op` (regs ! rs2)
     let regs' = insert rd alu regs
@@ -117,6 +118,7 @@ execute (CPU regs iMem dMem inMem outMem) (ISA.MathImmideate opcode rd rs1 imm) 
         17 -> Right (-)
         18 -> Right (*)
         19 -> Right Prelude.div
+        24 -> Right Prelude.mod
         _  -> Left $ "Error: No math operation with opcode " ++ show opcode
 
     let alu = (regs ! rs1) `op` imm

@@ -82,18 +82,42 @@ tail:
         addI dr dr 4
         ret
 
-# takes a0 as address of string and returns a0 as int
-toInt:
-    lwm t0 a0 0
-    add a1 a1 zero
-    _loop:
-        jel t0 zero _end
-        addI a0 a0 4
-        lwm tr a0 0
-        subI tr tr 48
-        mulI a1 a1 10
-        add a1 a1 tr
-        jumpl _loop
-    _end:
-        add a0 a1 zero
+outputChar:
+    swm a0 dr 0
+    swo dr rout 0
+    addI rout rout 4
+    ret
+
+outputInt:
+    jel a0 zero _output0
+    jll a0 zero _wsign
+    call outputPositiveInt
+    ret
+    _wsign:
+        add s0 a0 zero
+        addI a0 zero 45
+        call outputChar
+        sub a0 zero s0
+        jumpl outputPositiveInt
+    _output0:
+        addI a0 zero 48
+        call outputChar
         ret
+# takes a0 as int and prints it
+outputPositiveInt:
+    jel a0 zero _end
+    swm a0 sp 0
+    subI sp sp 4
+    divI a0 a0 10
+    call outputPositiveInt
+    addI sp sp 4
+    lwm a0 sp 0
+    modI a0 a0 10
+    addI a0 a0 48
+    call outputChar
+    _end:
+        ret
+
+# id x = x
+id:
+    ret

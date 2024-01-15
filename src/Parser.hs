@@ -22,8 +22,8 @@ whiteSpace = Token.whiteSpace lexer
 identifier = Token.identifier lexer -- parses an identifier
 
 
-mathOp = string "add" <|> string "sub" <|> string "mul" <|> string "divs"
-mathIOp = string "addI" <|> string "subI" <|> string "mulI" <|> string "divI"
+mathOp = string "add" <|> string "sub" <|> try (string "mul") <|> try (string "mod") <|> string "div"
+mathIOp = string "addI" <|> string "subI" <|> try (string "mulI") <|> try (string "modI") <|> string "divI"
 branchOp = try (string "je") <|> try (string "jne") <|> try (string "jl") <|> try (string "jg")
 registerMemoryOp = string "lwm" <|> string "swm"
 memoryMemoryOp = string "lwi" <|> string "swo"
@@ -114,6 +114,7 @@ math = do
         op' "sub" = ISA.sub
         op' "mul" = ISA.mul
         op' "div" = ISA.div
+        op' "mod" = ISA.mod
         op' s = error $ "error: expected add or sub or mul or div, but got " ++ s
 
 mathI :: Parser ISA.Instruction
@@ -135,6 +136,7 @@ mathI = do
         op' "subI" = ISA.subI
         op' "mulI" = ISA.mulI
         op' "divI" = ISA.divI
+        op' "modI" = ISA.modI
         op' s = error $ "error: expected addI or subI or mulI or divI, but got " ++ s
 
 branch :: Parser ISA.Instruction

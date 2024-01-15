@@ -51,9 +51,11 @@ v1 :: Register
 v1 = Register Virtual "v1"
 v2 :: Register
 v2 = Register Virtual "v2"
+ca0 :: Register
+ca0 = Register Special "ca0"
 
 registers :: [Register]
-registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, v1, v2]
+registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, v1, v2, ca0]
 
 argumentRegisters :: [Register]
 argumentRegisters = filter (\r -> rType r == Argument) registers
@@ -101,17 +103,18 @@ data Instruction =
     deriving(Eq)
 
 instance Show Instruction where
-    show(MathOp op rd rs1 rs2 _) = 
-        let 
+    show(MathOp op rd rs1 rs2 _) =
+        let
             prefix = case op of
                 0 -> "add"
                 1 -> "sub"
                 2 -> "mul"
                 3 -> "div"
+                8 -> "mod"
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show rs2
-    show(Branch op _ rs1 rs2 imm) = 
-        let 
+    show(Branch op _ rs1 rs2 imm) =
+        let
             prefix = case op of
                 4 -> "je"
                 5 -> "jne"
@@ -119,36 +122,37 @@ instance Show Instruction where
                 7 -> "jl"
         in
             prefix ++ " "  ++ show rs1 ++ " " ++ show rs2 ++ " " ++ show imm
-    show(MathImmideate op rd rs1 imm) = 
-        let 
+    show(MathImmideate op rd rs1 imm) =
+        let
             prefix = case op of
                 16 -> "addI"
                 17 -> "subI"
                 18 -> "mulI"
                 19 -> "divI"
+                24 -> "modI"
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
-    show(RegisterMemory op rd rs1 imm) = 
-        let 
+    show(RegisterMemory op rd rs1 imm) =
+        let
             prefix = case op of
                 20 -> "lwm"
                 21 -> "swm"
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
 
-    show(MemoryMemory op rd rs1 imm) = 
-        let 
+    show(MemoryMemory op rd rs1 imm) =
+        let
             prefix = case op of
                 22 -> "lwi"
                 23 -> "swo"
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
-    show(Jump _ rd imm) = "jump " ++ show rd ++ " " ++ show imm
-    show(Nop) = "nop"
-    show(Halt) = "halt"
-    show(Label name) = name ++ ":"
-    show(PseudoBranch op _ rs1 rs2 label) = 
-        let 
+    show (Jump _ rd imm) = "jump " ++ show rd ++ " " ++ show imm
+    show Nop = "nop"
+    show Halt = "halt"
+    show (Label name) = name ++ ":"
+    show (PseudoBranch op _ rs1 rs2 label) =
+        let
             prefix = case op of
                 4 -> "jel"
                 5 -> "jnel"
@@ -169,6 +173,8 @@ mul :: Rd -> Rs1 -> Rs2 -> Instruction
 mul rd rs1 rs2 = MathOp 2 rd rs1 rs2 0
 div :: Rd -> Rs1 -> Rs2 -> Instruction
 div rd rs1 rs2 = MathOp 3 rd rs1 rs2 0
+mod :: Rd -> Rs1 -> Rs2 -> Instruction
+mod rd rs1 rs2 = MathOp 8 rd rs1 rs2 0
 -- Branch instructions
 je :: Rs1 -> Rs2 -> Imm -> Instruction
 je = Branch 4 pc -- if(@rs1 == @rs2) pc <- pc + imm
@@ -190,6 +196,8 @@ mulI :: Rd -> Rs1 -> Imm -> Instruction
 mulI = MathImmideate 18
 divI :: Rd -> Rs1 -> Imm -> Instruction
 divI = MathImmideate 19
+modI :: Rd -> Rs1 -> Imm -> Instruction
+modI = MathImmideate 24
 
 -- R-M instructions
 lwm :: Rd -> Rs1 -> Imm -> Instruction

@@ -1,9 +1,9 @@
 module Language where
 
-import qualified Data.Map as Map
-import Text.ParserCombinators.Parsec
-import Text.ParserCombinators.Parsec.Language
-import qualified Text.ParserCombinators.Parsec.Token as Token
+import qualified Data.Map                               as Map
+import           Text.ParserCombinators.Parsec
+import           Text.ParserCombinators.Parsec.Language
+import qualified Text.ParserCombinators.Parsec.Token    as Token
 
 data Expr
   = EVar String
@@ -55,7 +55,7 @@ data BinaryOperation
   | Sub
   | Mul
   | Div
-  | SplitArgs
+  | Mod
   deriving (Show, Eq)
 
 binaryOperations :: Map.Map String BinaryOperation
@@ -64,12 +64,12 @@ binaryOperations =
     [ ("==", Eq),
       (">", G),
       ("<", L),
-      ("/=", NotE),
+      ("!=", NotE),
       ("+", Sum),
       ("-", Sub),
       ("*", Mul),
       ("/", Div),
-      (",", SplitArgs)
+      ("%", Mod)
     ]
 
 isBinaryBoolean :: BinaryOperation -> Bool
@@ -83,15 +83,10 @@ languageDef =
       Token.commentLine = "--",
       Token.identStart = letter,
       Token.identLetter = alphaNum,
-      Token.reservedNames = [],
+      Token.reservedNames = ["If", "Then", "Else", "Let", "In"],
       Token.reservedOpNames = Map.keys binaryOperations ++ Map.keys unaryOperations
     }
 
 getVariableName :: Expr -> String
 getVariableName (EVar x) = x
-getVariableName _ = error "Expression not a variable"
-
-
-toArgs :: CoreExpr -> [CoreExpr]
-toArgs (EBinOp SplitArgs e1 e2) = e1 : toArgs e2
-toArgs expr = [expr]
+getVariableName _        = error "Expression not a variable"

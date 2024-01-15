@@ -1,12 +1,13 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE NamedFieldPuns        #-}
+{-# LANGUAGE TupleSections         #-}
 
 
 module Translator where
 import           Data.Char (ord)
 import           Data.List (sortOn)
-import           Data.Map  (Map, assocs, elems, empty, fromList, insert, keys,
-                            notMember)
+import           Data.Map  (Map, assocs, delete, elems, empty, fromList, insert,
+                            keys, notMember)
 import           Data.Map  as Map (lookup)
 import           ISA
 import           Language
@@ -27,23 +28,24 @@ saveCaller MemoryMapper{variableMap} =
 
 popCaller :: MemoryMapper -> [ISA.Instruction]
 popCaller MemoryMapper{variableMap} =
-    concatMap ISA.pop $ filter (\r -> rType r /= Saved && rType r /= Hardwired && rType r /= Special) $ elems variableMap
+    concatMap ISA.pop $ reverse $ filter (\r -> rType r /= Saved && rType r /= Hardwired && rType r /= Special) $ elems variableMap
 
 moveArgs :: MemoryMapper -> [Variable] -> [ISA.Instruction]
 moveArgs mp vars =
     if length vars <= length ISA.argumentRegisters
-        then zipWith (\x y -> ISA.add x y zero) ISA.argumentRegisters
-    (map (getReg mp) vars)
+        then zipWith (\x y -> ISA.add x y zero) ISA.argumentRegisters (map (getReg mp) vars)
         else error $ maxArgsError $ length ISA.argumentRegisters
 
 moveA0 :: MemoryMapper -> (MemoryMapper, [ISA.Instruction])
 moveA0 mp =
     let
         vars = map fst $ filter (\x -> snd x == a0) (assocs $ variableMap mp)
-        mp' = allocVariables mp vars
-        regs = map (getReg mp') vars
+        (mp', var) = newVariable mp
+        reg = getReg mp' var
+        funct m (v, r) = assocVariable m v r
+        mp'' = foldl funct mp $ map (,reg) vars
     in
-        (mp', map (\reg -> ISA.add reg a0 zero) regs)
+        (mp'', [ISA.add reg a0 zero])
 
 newVariable :: MemoryMapper -> (MemoryMapper, Variable)
 newVariable mp =
@@ -104,9 +106,12 @@ translateArgs mp (expr : exprs) =
     in
         (mp'', var : vars, i1s ++ i2s)
 
-
 containsVar :: MemoryMapper -> Variable -> Bool
 containsVar MemoryMapper{variableMap} var = elem var $ keys variableMap
+
+
+getVar :: MemoryMapper -> Register -> Variable
+getVar MemoryMapper{variableMap} reg = head (map fst $ filter (\(x, y) -> y == reg) (assocs variableMap))
 
 translate :: Language.Program -> ([ISA.Instruction], [Int])
 translate program =
@@ -160,18 +165,19 @@ translateHelper mp (EBinOp op e1 e2) =
     let
         (mp', v1, i1s) = translateHelper mp e1
         (mp'', v2, i2s) = translateHelper mp' e2
-        (mpVar, var) = newVariable mp
+        (mpVar, var) = newVariable mp''
         rd = getReg mpVar var
-        rs1 = getReg mp'' v1
-        rs2 = getReg mp'' v2
+        rs1 = getReg mpVar v1
+        rs2 = getReg mpVar v2
         instr = case op of
             Language.Sum -> ISA.add rd rs1 rs2
             Language.Sub -> ISA.sub rd rs1 rs2
             Language.Mul -> ISA.mul rd rs1 rs2
             Language.Div -> ISA.div rd rs1 rs2
-            _            -> error "only arithmetical operations are supported"
+            Language.Mod -> ISA.mod rd rs1 rs2
+            _            -> error $ "only arithmetical operations are supported, not " ++ show op
     in
-        (mp''{variableMap = variableMap mpVar}, var, i1s ++ i2s ++ [instr])
+        (mpVar, var, i1s ++ i2s ++ [instr])
 
 translateHelper mp (EIf (EBinOp op e1 e2) (eTrue, eFalse)) =
     let
@@ -187,16 +193,19 @@ translateHelper mp (EIf (EBinOp op e1 e2) (eTrue, eFalse)) =
             G    -> ISA.jgl r1 r2 trueLabel
             L    -> ISA.jll r1 r2 trueLabel
             NotE -> ISA.jnel r1 r2 trueLabel
-        (mpFalse, vF, ifs) = translateHelper mp5 eFalse
-        rdFalse = getReg mpFalse finalVar
+
+        rd = getReg mp5 finalVar
+        (mpFalse, vF, ifs) = translateHelper mp5 (EFunCall "id" [eFalse])
         rF = getReg mpFalse vF
-        ifs' = ifs ++ [ISA.add rdFalse rF zero, ISA.jmpl finalLabel]
-        (mpTrue, vT, its) = translateHelper mpFalse{variableMap = variableMap mp5} eTrue
-        rdTrue = getReg mpTrue finalVar
+
+        ifs' = ifs ++ [ISA.add rd rF zero, ISA.jmpl finalLabel]
+
+        (mpTrue, vT, its) = translateHelper mpFalse{variableMap = variableMap mp5} (EFunCall "id" [eTrue])
         rT = getReg mpTrue vT
-        its' = its ++ [ISA.add rdTrue rT zero, ISA.Label finalLabel]
+        its' = its ++ [ISA.add rd rT zero, ISA.Label finalLabel]
     in
-        (mpTrue{variableMap = variableMap mp5}, finalVar, i1s ++ i2s ++ instr : ifs' ++ Label trueLabel : its')
+        (mpTrue, finalVar, i1s ++ i2s ++ instr : ifs' ++ Label trueLabel : its')
+
 
 translateHelper mp (EUnOp op expr) =
     let

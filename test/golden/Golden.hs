@@ -32,10 +32,13 @@ execute srcFile inFile outFile = do
           let cpu' = Emulator.setDataMem cpu dt
           let cpu'' = Emulator.setInMem cpu' inMem
           let (cpus, code) = Emulator.emulate cpu''
-          let cpus' = take 1000 cpus
+          let cpus' = take 100 cpus
           let outCpus = concatMap (\x -> show x ++ "\n") cpus'
           let outMem = map chr $ elems.Emulator.outMem $ last cpus
-          writeFile outFile $ outCpus ++ code ++ "\nOutput: " ++ outMem ++ "\n"
+          let instructionsOut = "Instructions: |-\n" ++ concatMap (\x -> show x ++ "\n") instructions' ++ "\n"
+          let stdin = "Stdin: |-\n" ++ inContents
+          let instrTotal = "Total: |-\n" ++ show (length cpus) ++ " instructions executed"
+          writeFile outFile $ instructionsOut ++ stdin ++ "\nTicks: |-\n" ++ outCpus ++ "\nStdout: |-\n" ++ outMem ++ "\n" ++ instrTotal ++ "\n"
 
 goldenTests :: IO TestTree
 goldenTests = do

@@ -1,11 +1,11 @@
 module LanguageParser(program) where
 
-import qualified Data.Map as Map
-import Language
-import Text.Parsec.Expr
-import Text.ParserCombinators.Parsec
-import Text.ParserCombinators.Parsec.Token (comma, lexeme)
+import qualified Data.Map                            as Map
+import           Language
+import           Text.Parsec.Expr
+import           Text.ParserCombinators.Parsec
 import qualified Text.ParserCombinators.Parsec.Token as Token
+import           Text.ParserCombinators.Parsec.Token (comma, lexeme)
 
 lookupR :: Eq b => b -> Map.Map c b -> c
 lookupR v = fst . head . Map.assocs . Map.filter (== v)
@@ -22,6 +22,8 @@ braces = Token.braces lexer
 
 commaSep = Token.commaSep lexer
 
+reservedOp = Token.reservedOp lexer
+
 
 int :: Parser Int
 int = fromInteger <$> Token.integer lexer
@@ -32,28 +34,29 @@ mapValueBetweenSpaces :: Eq a => Map.Map String a -> a -> Parser String
 mapValueBetweenSpaces m v = try (whiteSpace *> string (lookupR v m) <* whiteSpace)
 
 oneOfKeys :: Map.Map String a -> Parser a
-oneOfKeys m = ((Map.!) m) <$> (choice . map string . Map.keys $ m)
+oneOfKeys m = (Map.!) m <$> (choice . map string . Map.keys $ m)
 
 unOp op = Prefix $ EUnOp op <$ mapValueBetweenSpaces unaryOperations op
 
-binOp op = Infix (EBinOp op <$ mapValueBetweenSpaces binaryOperations op) AssocRight
+binOp op = Infix (EBinOp op <$ mapValueBetweenSpaces binaryOperations op) AssocLeft
+
 
 operations =
   [ [unOp Not, unOp Neg],
-    [binOp Mul, binOp Div],
+    [binOp Mul, binOp Div, binOp Mod],
+    [binOp Eq, binOp NotE],
     [binOp Sum, binOp Sub],
-    [binOp L, binOp G],
-    [binOp Eq, binOp NotE]
+    [binOp L, binOp G]
   ]
 
 subExpression :: Parser CoreExpr
 subExpression =
   parens expression
     <|> try ifExpression
-    <|> letExpression
+    <|> try letExpression
     <|> try application
-    <|> EVar <$> variable
-    <|> primitive
+    <|> try (EVar <$> variable)
+    <|> try primitive
 
 
 expression :: Parser CoreExpr
@@ -66,7 +69,7 @@ definition = do
   whiteSpace
   char '('
   whiteSpace
-  vars <- try variableList <|> return []
+  vars <- variable `sepBy` (whiteSpace *>  char ',' <* whiteSpace)
   whiteSpace
   char ')'
   whiteSpace
@@ -80,11 +83,11 @@ definition = do
 letExpression :: Parser CoreExpr
 letExpression = do
   whiteSpace
-  string "let"
+  reservedOp "Let"
   whiteSpace
   exprs <- variableDefinition `sepBy` (whiteSpace *>  char ',' <* whiteSpace)
   whiteSpace
-  string "in"
+  reservedOp "In"
   whiteSpace
   var <- expression
   whiteSpace
@@ -93,22 +96,22 @@ letExpression = do
 ifExpression :: Parser CoreExpr
 ifExpression = do
   whiteSpace
-  string "if"
+  reservedOp "If"
   whiteSpace
   condition <- expression
   whiteSpace
-  string "then"
+  reservedOp "Then"
   whiteSpace
   trueBranch <- expression
   whiteSpace
-  string "else"
+  reservedOp "Else"
   whiteSpace
   falseBranch <- expression
   whiteSpace
   return $ EIf condition (trueBranch, falseBranch)
 
 function :: Parser String
-function = identifier
+function = variable
 
 variable :: Parser Variable
 variable = identifier
