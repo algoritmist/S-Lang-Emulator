@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
         EmulatorLib
+      , RealLib
       , SlangLib
       , Emulator
       , ISA
@@ -35,17 +36,36 @@ library
       , Language
       , Translator
       , LanguageParser
+      , DataPath
       , Paths_Emulator
   autogen-modules:
       Paths_Emulator
   hs-source-dirs:
       src
-  ghc-options: -g -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , parsec
     , filepath
     , regex-tdfa >=1.3.2 && <1.4
+    , containers
+  default-language: Haskell2010
+
+executable RealEmulator-exe
+  main-is: RealEmulator.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , parsec
+    , filepath
+    , regex-tdfa >=1.3.2 && <1.4
+    , base >=4.7 && <5
     , containers
   default-language: Haskell2010
 

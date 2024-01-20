@@ -9,6 +9,7 @@ import           Data.Map          (elems)
 import qualified Emulator
 import qualified EmulatorLib
 import qualified SlangLib
+import RealLib
 
 main :: IO ()
 main = defaultMain =<< goldenTests
@@ -28,18 +29,15 @@ execute srcFile inFile outFile = do
           let (instructions, dt) = SlangLib.tranlsate program
           let instructions' = instructions ++ libInstructions
           let realInstructions = EmulatorLib.convert instructions'
-          let cpu = Emulator.setIstructionMem Emulator.initDefault realInstructions
-          let cpu' = Emulator.setDataMem cpu dt
-          let cpu'' = Emulator.setInMem cpu' inMem
-          let (cpus, code) = Emulator.emulate cpu''
+          let (cpus, code) = simulate realInstructions dt inMem
+          --writeFile outFile code
           let cpus' = take 100 cpus
           let outCpus = concatMap (\x -> show x ++ "\n") cpus'
-          let outMem = map chr $ elems.Emulator.outMem $ last cpus
+          let outMem = map chr (elems $ getOutMem $ last cpus)
           let instructionsOut = "Instructions: |-\n" ++ concatMap (\x -> show x ++ "\n") instructions' ++ "\n"
           let stdin = "Stdin: |-\n" ++ inContents
           let instrTotal = "Total: |-\n" ++ show (length cpus) ++ " instructions executed"
           writeFile outFile $ instructionsOut ++ stdin ++ "\nTicks: |-\n" ++ outCpus ++ "\nStdout: |-\n" ++ outMem ++ "\n" ++ instrTotal ++ "\n"
-
 goldenTests :: IO TestTree
 goldenTests = do
   slangFiles <- findByExtension [".sl"] "golden"

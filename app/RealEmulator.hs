@@ -2,7 +2,7 @@ module Main (main) where
 
 import           Data.Char                (chr, ord)
 import           Data.Map                 (elems)
-import           Emulator
+import           RealLib
 import EmulatorLib
 import           System.Environment.Blank (getArgs)
 import           System.IO
@@ -22,7 +22,7 @@ main = do
         let libPath = "src/Prelude.asm"
         libContents <- readFile libPath
         instructionContents <- readFile instructionFile
-        let instructionMemory' = convert $ parse program instructionFile $  instructionContents ++ libContents
+        let instructionMemory' = convert <$> (parse program instructionFile $  instructionContents)
         dContents <- readFile dataFile
         let dMemory = map (\x -> read x :: Int) $ lines dContents
         inContents <- readFile inputFile
@@ -30,10 +30,7 @@ main = do
         case instructionMemory' of
             Left err -> print err
             Right instructionMemory -> do
-                --print instructionMemory
-                let cpu = Emulator.setInMem (Emulator.setIstructionMem (Emulator.setDataMem Emulator.initDefault dMemory) instructionMemory) inMemory
-                let (cpus, code) = Emulator.emulate cpu
+                let (cpus, code) = simulate instructionMemory dMemory inMemory
                 let cpus' = take maxLines cpus
                 let outCpus = concatMap (\x -> show x ++ "\n") cpus'
                 writeFile outputFile $ outCpus ++ code ++ "\n"
-                print $ map chr $ elems.outMem $ last cpus

@@ -57,6 +57,8 @@ ca0 = Register Special "ca0"
 registers :: [Register]
 registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, v1, v2, ca0]
 
+gpRegs = [zero, ra, sp, dr, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, tr]
+
 argumentRegisters :: [Register]
 argumentRegisters = filter (\r -> rType r == Argument) registers
 
