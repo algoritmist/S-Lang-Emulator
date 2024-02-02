@@ -5,7 +5,6 @@ import           Language
 import           Text.Parsec.Expr
 import           Text.ParserCombinators.Parsec
 import qualified Text.ParserCombinators.Parsec.Token as Token
-import           Text.ParserCombinators.Parsec.Token (comma, lexeme)
 
 lookupR :: Eq b => b -> Map.Map c b -> c
 lookupR v = fst . head . Map.assocs . Map.filter (== v)

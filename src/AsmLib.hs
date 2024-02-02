@@ -1,4 +1,4 @@
-module AsmLib where
+module AsmLib(program, convert) where
 import qualified Converter
 import qualified Parser
 

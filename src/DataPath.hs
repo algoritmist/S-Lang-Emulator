@@ -63,8 +63,8 @@ initDecoder =
         rOp = (+)
     }
 
-decode :: Instruction -> ControlUnit -> Decoder -> (ControlUnit, Decoder)
-decode instr@(MathOp op rd rs1 rs2 _) cu decoder =
+decode :: Instruction -> Decoder -> (ControlUnit, Decoder)
+decode instr@(MathOp op rd rs1 rs2 _) decoder =
     let
         cu' =
             ControlUnit
@@ -87,10 +87,11 @@ decode instr@(MathOp op rd rs1 rs2 _) cu decoder =
             2 -> (*)
             3 -> Prelude.div
             8 -> Prelude.mod
+            _ -> error $ "Decoder: unknown MathOp with op = " ++ show op
         decoder' = decoder{instruction = instr, opcode = op, rs1 = rs1, rs2 = rs2, rd = rd, immI = 0, rOp = operation}
     in
         (cu', decoder')
-decode instr@(MathImmideate op rd rs1 imm) cu decoder =
+decode instr@(MathImmideate op rd rs1 imm) decoder =
     let
         cu' =
             ControlUnit
@@ -113,11 +114,12 @@ decode instr@(MathImmideate op rd rs1 imm) cu decoder =
             18 -> (*)
             19 -> Prelude.div
             24 -> Prelude.mod
+            _  -> error $ "Decoder: unknown MathImmediate with op = " ++ show op
         decoder' = decoder{instruction = instr, opcode = op, rs1 = rs1, rd = rd, immI = imm, rOp = operation}
     in
         (cu', decoder')
 
-decode instr@(RegisterMemory 20 rd rs1 imm) cu decoder =
+decode instr@(RegisterMemory 20 rd rs1 imm) decoder =
     let
         cu' =
             ControlUnit
@@ -138,7 +140,7 @@ decode instr@(RegisterMemory 20 rd rs1 imm) cu decoder =
     in
         (cu', decoder')
 
-decode instr@(RegisterMemory 21 rd rs1 imm) cu decoder =
+decode instr@(RegisterMemory 21 rd rs1 imm) decoder =
     let
         cu' =
             ControlUnit
@@ -159,7 +161,7 @@ decode instr@(RegisterMemory 21 rd rs1 imm) cu decoder =
     in
         (cu', decoder')
 
-decode instr@(MemoryMemory 22 rs1 imm) cu decoder =
+decode instr@(MemoryMemory 22 rs1 imm) decoder =
     let
         cu' =
             ControlUnit
@@ -180,7 +182,7 @@ decode instr@(MemoryMemory 22 rs1 imm) cu decoder =
     in
         (cu', decoder')
 
-decode instr@(MemoryMemory 23 rs1 imm) cu decoder =
+decode instr@(MemoryMemory 23 rs1 imm) decoder =
     let
         cu' =
             ControlUnit
@@ -201,7 +203,7 @@ decode instr@(MemoryMemory 23 rs1 imm) cu decoder =
     in
         (cu', decoder')
 
-decode instr@(Branch op _ rs1 rs2 imm) cu decoder =
+decode instr@(Branch op _ rs1 rs2 imm) decoder =
     let
         cu' =
             ControlUnit
@@ -223,7 +225,7 @@ decode instr@(Branch op _ rs1 rs2 imm) cu decoder =
     in
         (cu', decoder')
 
-decode instr@(Jump op rd imm) cu decoder =
+decode instr@(Jump op rd imm) decoder =
     let
         cu' =
             ControlUnit
@@ -244,7 +246,7 @@ decode instr@(Jump op rd imm) cu decoder =
     in
         (cu', decoder')
 
-decode instr@Halt cu decoder =
+decode instr@Halt decoder =
     let
         cu' =
             ControlUnit
@@ -264,7 +266,7 @@ decode instr@Halt cu decoder =
     in
         (cu', decoder)
 
-decode instr@Nop cu decoder =
+decode instr@Nop decoder =
     let
         cu' =
             ControlUnit
@@ -284,9 +286,9 @@ decode instr@Nop cu decoder =
     in
         (cu', decoder)
 
-decode instr@Ret cu decoder = decode (ISA.jmp ISA.ra 8) cu decoder
+decode instr@Ret decoder = decode (ISA.jmp ISA.ra 8) decoder
 
-decode instr@SavePC cu decoder =
+decode instr@SavePC decoder =
     let
         cu' =
             ControlUnit
@@ -306,6 +308,9 @@ decode instr@SavePC cu decoder =
         decoder' = decoder{instruction = instr, opcode = 32, rd = ISA.ra, rs1 = ISA.zero, rs2 = ISA.zero, immI = 0}
     in
         (cu', decoder')
+
+decode instr _ = error $ "Decoder: cannon decode pseudo instruction " ++ show instr
+
 setBranchSignal :: Decoder -> ALU -> ControlUnit -> ControlUnit
 setBranchSignal decoder alu cu =
     if not (sigJB cu) then cu
@@ -562,7 +567,7 @@ instructionFetch (cu, dp@DataPath{pc, instrMem, pcAlu}) =
 instructionDecode :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
 instructionDecode (cu, dp@DataPath{regFile, instrMem, brAlu, pcAlu, decoder}) = do
     instr <- rd0 instrMem
-    let (cu', decoder') = decode instr cu decoder
+    let (cu', decoder') = decode instr decoder
     let brAlu' = brAlu {srcA = immB decoder', srcB = aluOut pcAlu}
     let regFile' = regFile{a1 = rs1 decoder', a2 = rs2 decoder', a3 = rd decoder', we1 = sigWE1 cu', aluOp = rOp decoder'}
     if sigHalt cu' then

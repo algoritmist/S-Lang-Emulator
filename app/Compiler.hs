@@ -1,9 +1,9 @@
 module Main(main) where
 import           System.Environment.Blank (getArgs)
-import           System.FilePath          (replaceExtension, takeBaseName)
-import           System.IO
+import           System.FilePath          (replaceExtension)
 import           Text.Parsec.Prim         (parse)
 import           TranslatorLib
+
 main :: IO ()
 main = do
     args <-  getArgs
@@ -17,7 +17,6 @@ main = do
         case result of
             Left err -> print err
             Right program -> do
-                print program
                 let (instructions, dt) = tranlsate program
                 let outBin = replaceExtension file ".asm"
                 let outData = replaceExtension file ".dmem"

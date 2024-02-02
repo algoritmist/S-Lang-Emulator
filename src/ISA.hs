@@ -57,6 +57,7 @@ ca0 = Register Special "ca0"
 registers :: [Register]
 registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, v1, v2, ca0]
 
+gpRegs :: [Register]
 gpRegs = [zero, ra, sp, dr, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, tr]
 
 argumentRegisters :: [Register]
@@ -115,6 +116,7 @@ instance Show Instruction where
                 2 -> "mul"
                 3 -> "div"
                 8 -> "mod"
+                _ -> error $ "Error: unknown MathOp with op = " ++ show op
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show rs2
     show(Branch op _ rs1 rs2 imm) =
@@ -124,6 +126,7 @@ instance Show Instruction where
                 5 -> "jne"
                 6 -> "jg"
                 7 -> "jl"
+                _ -> error $ "Error: unknown Branch with op = " ++ show op
         in
             prefix ++ " "  ++ show rs1 ++ " " ++ show rs2 ++ " " ++ show imm
     show(MathImmideate op rd rs1 imm) =
@@ -134,6 +137,7 @@ instance Show Instruction where
                 18 -> "mulI"
                 19 -> "divI"
                 24 -> "modI"
+                _ -> error $ "Error: unknown MathImmediate with op = " ++ show op
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
     show(RegisterMemory op rd rs1 imm) =
@@ -141,6 +145,7 @@ instance Show Instruction where
             prefix = case op of
                 20 -> "lwm"
                 21 -> "swm"
+                _ -> error $ "Error: unknown RegisterMemory with op = " ++ show op
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
 
@@ -149,6 +154,7 @@ instance Show Instruction where
             prefix = case op of
                 22 -> "lwi"
                 23 -> "swo"
+                _ -> error $ "Error: unknown MemoryMemory with op = " ++ show op
         in
             prefix ++ " " ++ show rs1 ++ " " ++ show imm
     show (Jump _ rd imm) = "jump " ++ show rd ++ " " ++ show imm

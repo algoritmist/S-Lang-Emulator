@@ -2,14 +2,9 @@ module Parser(program) where
 
 import qualified Data.Map                               as Map
 import qualified ISA
-import           Text.Parsec.Expr
 import           Text.ParserCombinators.Parsec
 import           Text.ParserCombinators.Parsec.Language
 import qualified Text.ParserCombinators.Parsec.Token    as Token
-import           Text.ParserCombinators.Parsec.Token    (comma, lexeme)
-
-lookupR :: Eq b => b -> Map.Map c b -> c
-lookupR v = fst . head . Map.assocs . Map.filter (== v)
 
 languageDef :: Token.LanguageDef a
 languageDef = emptyDef  {Token.commentLine = "#"}

@@ -1,6 +1,5 @@
 module Converter(toReal) where
-import           Data.List (length)
-import           Data.Map  as Map (Map, empty, insert, lookup)
+import           Data.Map as Map (Map, empty, insert, lookup)
 import qualified ISA
 toReal :: [ISA.Instruction] -> [ISA.Instruction]
 toReal xs = toRealHelper xs (buildMap xs) 0 ""
@@ -22,7 +21,7 @@ buildMapHelper addr (ISA.Label name : xs) mp topLabel =
         buildMapHelper (addr + 4) xs mp' topLabel'
 buildMapHelper addr (ISA.PseudoCall _ _ : xs) mp topLabel = buildMapHelper (addr + 20 + 4) xs mp topLabel
 buildMapHelper addr (ISA.PseudoLabelCall _ : xs) mp topLabel = buildMapHelper (addr + 20 + 4) xs mp topLabel
-buildMapHelper addr (x:xs) mp topLabel = buildMapHelper (addr + 4) xs mp topLabel
+buildMapHelper addr (_:xs) mp topLabel = buildMapHelper (addr + 4) xs mp topLabel
 buildMapHelper _ [] mp _ = mp
 
 

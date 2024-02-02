@@ -1,11 +1,9 @@
 module Main (main) where
 
-import           Data.Char                (chr, ord)
-import           Data.Map                 (elems)
 import           AsmLib
-import EmulatorLib
+import           Data.Char                (chr, ord)
+import           EmulatorLib
 import           System.Environment.Blank (getArgs)
-import           System.IO
 import           Text.Parsec.Prim         (parse)
 
 maxLines :: Int
@@ -21,8 +19,8 @@ main = do
         let [instructionFile, dataFile, inputFile, outputFile] = args
         let libPath = "src/Prelude.asm"
         libContents <- readFile libPath
-        instructionContents <- readFile instructionFile
-        let instructionMemory' = convert <$> (parse program instructionFile $  instructionContents)
+        instructionContents <- readFile instructionFile ++ libContents
+        let instructionMemory' = convert <$> parse program instructionFile instructionContents
         dContents <- readFile dataFile
         let dMemory = map (\x -> read x :: Int) $ lines dContents
         inContents <- readFile inputFile

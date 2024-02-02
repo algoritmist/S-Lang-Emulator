@@ -3,16 +3,23 @@
 {-# LANGUAGE TupleSections         #-}
 
 
-module Translator where
+module Translator(translate) where
 import           Data.Char (ord)
 import           Data.List (sortOn)
-import           Data.Map  (Map, assocs, delete, elems, empty, fromList, insert,
-                            keys, notMember)
+import           Data.Map  (Map, assocs, elems, empty, fromList, insert, keys)
 import           Data.Map  as Map (lookup)
 import           ISA
 import           Language
 
-data MemoryMapper = MemoryMapper {variableMap :: Map Variable Register, dataMap :: Map [Int] Int, drPtr :: Int, varCount :: Int, generatedLabels :: Int}
+data MemoryMapper =
+    MemoryMapper
+    {
+        variableMap     :: Map Variable Register,
+        dataMap         :: Map [Int] Int,
+        drPtr           :: Int,
+        varCount        :: Int,
+        generatedLabels :: Int
+    }
 
 maxArgsError :: Int -> String
 maxArgsError args = "Max number of supported arguments: " ++ show args
@@ -111,7 +118,7 @@ containsVar MemoryMapper{variableMap} var = elem var $ keys variableMap
 
 
 getVar :: MemoryMapper -> Register -> Variable
-getVar MemoryMapper{variableMap} reg = head (map fst $ filter (\(x, y) -> y == reg) (assocs variableMap))
+getVar MemoryMapper{variableMap} reg = head (map fst $ filter (\x -> snd x == reg) (assocs variableMap))
 
 translate :: Language.Program -> ([ISA.Instruction], [Int])
 translate program =
@@ -179,7 +186,7 @@ translateHelper mp (EBinOp op e1 e2) =
     in
         (mpVar, var, i1s ++ i2s ++ [instr])
 
-translateHelper mp (EIf (EBinOp op e1 e2) (eTrue, eFalse)) =
+translateHelper mp (EIf op'@(EBinOp op e1 e2) (eTrue, eFalse)) =
     let
         (mp', v1, i1s) = translateHelper mp e1
         (mp'', v2, i2s) = translateHelper mp' e2
@@ -193,6 +200,7 @@ translateHelper mp (EIf (EBinOp op e1 e2) (eTrue, eFalse)) =
             G    -> ISA.jgl r1 r2 trueLabel
             L    -> ISA.jll r1 r2 trueLabel
             NotE -> ISA.jnel r1 r2 trueLabel
+            _ -> error $ "Translator: expected boolean expression but got: " ++ show op'
 
         rd = getReg mp5 finalVar
         (mpFalse, vF, ifs) = translateHelper mp5 (EFunCall "id" [eFalse])
@@ -206,6 +214,7 @@ translateHelper mp (EIf (EBinOp op e1 e2) (eTrue, eFalse)) =
     in
         (mpTrue, finalVar, i1s ++ i2s ++ instr : ifs' ++ Label trueLabel : its')
 
+translateHelper _ (EIf expr _) = error $ "Translator: expected boolean expression but got: " ++ show expr
 
 translateHelper mp (EUnOp op expr) =
     let
