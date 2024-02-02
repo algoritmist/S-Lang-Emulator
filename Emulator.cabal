@@ -25,18 +25,17 @@ source-repository head
 
 library
   exposed-modules:
-        EmulatorLib
-      , RealLib
-      , SlangLib
-      , Emulator
+        AsmLib
+      , TranslatorLib
+      , EmulatorLib
       , ISA
+      , DataPath
   other-modules:
       , Parser
       , Converter
       , Language
       , Translator
       , LanguageParser
-      , DataPath
       , Paths_Emulator
   autogen-modules:
       Paths_Emulator
@@ -127,7 +126,7 @@ test-suite Golden-tests
     , base >=4.7 && <5
 test-suite Unit-tests
   type: exitcode-stdio-1.0
-  main-is: Tests.hs
+  main-is: EmulatorTest.hs
   other-modules:
       Paths_Emulator
   autogen-modules:

@@ -85,7 +85,7 @@ putList mp lst =
     in
         case Map.lookup lst dMap of
             Just addr -> (mp, addr)
-            _ -> (mp{dataMap = insert lst drValue dMap, drPtr = drValue + 4 * length lst}, drValue)
+            _ -> (mp{dataMap = insert lst drValue dMap, drPtr = drValue + length lst}, drValue)
 
 emptyMapping :: MemoryMapper -> MemoryMapper
 emptyMapping mp = mp{variableMap = empty}
@@ -145,7 +145,7 @@ translateHelper mp (EDefinition Language.Function{name, args, expr}) =
         (
             mp5,
             var,
-            label : instructions ++ [ISA.add a0 reg zero, ISA.ret]
+            label : instructions ++ [ISA.add a0 reg zero, ISA.Ret]
         )
 
 translateHelper mp (EFunCall name args) =
@@ -229,7 +229,7 @@ translateHelper mp (EInt x) =
 
 translateHelper mp (EList lst) =
     let
-        lst' = 4 * length lst : lst
+        lst' = length lst : lst
         (mp', var) = newVariable mp
         reg = getReg mp' var
         (mp'', addr) = putList mp' lst'

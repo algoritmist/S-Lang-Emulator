@@ -2,7 +2,7 @@ module Main (main) where
 
 import           Data.Char                (chr, ord)
 import           Data.Map                 (elems)
-import           RealLib
+import           AsmLib
 import EmulatorLib
 import           System.Environment.Blank (getArgs)
 import           System.IO

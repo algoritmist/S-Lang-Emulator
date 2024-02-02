@@ -60,13 +60,13 @@ registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, 
 gpRegs = [zero, ra, sp, dr, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, tr]
 
 argumentRegisters :: [Register]
-argumentRegisters = filter (\r -> rType r == Argument) registers
+argumentRegisters = filter (\r -> rType r == Argument) gpRegs
 
 temporaryRegisters :: [Register]
-temporaryRegisters = filter (\r -> rType r == Temporary) registers
+temporaryRegisters = filter (\r -> rType r == Temporary) gpRegs
 
 savedRegisters :: [Register]
-savedRegisters = filter (\r -> rType r == Saved) registers
+savedRegisters = filter (\r -> rType r == Saved) gpRegs
 
 
 toReg :: String -> Register
@@ -92,11 +92,13 @@ data Instruction =
     MathOp Opcode Rd Rs1 Rs2 Imm |
     Branch    Opcode Rd Rs1 Rs2 Imm |
     RegisterMemory Opcode Rd Rs1 Imm |
-    MemoryMemory Opcode Rd Rs1 Imm |
+    MemoryMemory Opcode Rs1 Imm |
     MathImmideate Opcode Rd Rs1 Imm |
     Jump Opcode Rd Imm |
+    Ret |
     Nop |
     Halt |
+    SavePC |
     Label Name |
     PseudoBranch Opcode Rd Rs1 Rs2 LabelName |
     PseudoJump Opcode LabelName |
@@ -142,13 +144,13 @@ instance Show Instruction where
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
 
-    show(MemoryMemory op rd rs1 imm) =
+    show(MemoryMemory op rs1 imm) =
         let
             prefix = case op of
                 22 -> "lwi"
                 23 -> "swo"
         in
-            prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show imm
+            prefix ++ " " ++ show rs1 ++ " " ++ show imm
     show (Jump _ rd imm) = "jump " ++ show rd ++ " " ++ show imm
     show Nop = "nop"
     show Halt = "halt"
@@ -162,9 +164,11 @@ instance Show Instruction where
                 7 -> "jll"
         in
             prefix ++ " "  ++ show rs1 ++ " " ++ show rs2 ++ " " ++ label
-    show(PseudoJump _ label) = "jumpl " ++ label
-    show(PseudoCall rd imm) = "call " ++ show rd ++ " " ++ show imm
-    show(PseudoLabelCall label) = "call " ++ label
+    show (PseudoJump _ label) = "jumpl " ++ label
+    show (PseudoCall rd imm) = "call " ++ show rd ++ " " ++ show imm
+    show (PseudoLabelCall label) = "call " ++ label
+    show Ret = "ret"
+    show SavePC = "savePC"
 
 -- R-R instructions
 add :: Rd -> Rs1 -> Rs2 -> Instruction
@@ -208,22 +212,20 @@ swm :: Rd -> Rs1 -> Imm -> Instruction
 swm = RegisterMemory 21
 
 -- M-M instructions
-lwi :: Rd -> Rs1 -> Imm -> Instruction
+lwi :: Rs1 -> Imm -> Instruction
 lwi = MemoryMemory 22
-swo :: Rd -> Rs1 -> Imm -> Instruction
+swo :: Rs1 -> Imm -> Instruction
 swo = MemoryMemory 23
 
 -- Pseudo instructions
 push :: Register -> [Instruction]
-push rs = [swm rs sp 0, subI sp sp 4]
+push rs = [swm rs sp 0, subI sp sp 1]
 pop :: Register -> [Instruction]
-pop rd = [addI sp sp 4, lwm rd sp 0]
-ret :: Instruction
-ret = addI pc ra 4 -- pc <- ra, pop ra
+pop rd = [addI sp sp 1, lwm rd sp 0]
 
 type Offset = Int
 call :: Register -> Offset -> [Instruction]
-call rd imm =  push ra ++ [add ra pc zero, jmp rd (imm - 12)] ++ pop ra
+call rd imm =  push ra ++ [SavePC, jmp rd imm] ++ pop ra
 
 -- Pseudo branch instructions
 jel :: Rs1 -> Rs2 -> LabelName -> Instruction

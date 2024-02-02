@@ -1,12 +1,7 @@
-module EmulatorLib
-    ( program, convert
-    ) where
-import qualified Converter
-import qualified Emulator
-import qualified Parser
+module EmulatorLib where
+import qualified DataPath(simulate)
+import DataPath(outStorage, ioDev, DataPath)
 
-program = Parser.program
-convert = Converter.toReal
+simulate = DataPath.simulate
 
-emulate = Emulator.emulate
-
+getOutMem = outStorage.ioDev

@@ -63,7 +63,7 @@ ret = do
     whiteSpace
     string "ret"
     whiteSpace
-    return ISA.ret
+    return ISA.Ret
 
 call :: Parser ISA.Instruction
 call = do
@@ -184,15 +184,12 @@ memoryMemory = do
     whiteSpace
     name <- memoryMemoryOp
     whiteSpace
-    rd <- identifier
-    whiteSpace
     rs1 <- identifier
     whiteSpace
     imm <- int
     whiteSpace
-    let rd' = ISA.toReg rd
     let rs1' = ISA.toReg rs1
-    return $ op' name rd' rs1' imm
+    return $ op' name rs1' imm
     where
         op' "lwi" = ISA.lwi
         op' "swo" = ISA.swo

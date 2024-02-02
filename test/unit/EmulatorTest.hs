@@ -1,85 +1,84 @@
-module EmulatorTest(tests) where
-import           Data.Map   (fromList, (!))
-import           Emulator
+{-# LANGUAGE NamedFieldPuns #-}
+
+module Main where
+import           Data.Map   (fromList, (!), elems, assocs)
+import           DataPath
 import           ISA
 import           Test.HUnit
 
-cpu = Emulator.initDefault
-
 testAddI :: Test
-testAddI = TestCase $ assertEqual "add t0 t0 42" (Right 42) $
+testAddI = TestCase $ assertEqual "add t0 t0 42" (42) $
     let
-        result = execute cpu (addI t0 t0 42)
+        instrs = [addI t0 t0 42]
+        dmem = []
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        rf = regFile $ last dps
     in
-        case result of
-            Right cpu' -> Right $ regs cpu' ! t0
-            Left err   -> Left err
+        getRegisterValue t0 rf
 
-testMul = TestCase $ assertEqual "t1 <- 2, t2 <- 21, mul t0 t1 t2" (Right 42) $
+testMul = TestCase $ assertEqual "t1 <- 2, t2 <- 21, mul t0 t1 t2" (42) $
     let
-        result = do
-            cpu' <- execute cpu (addI t1 t1 2)
-            cpu'' <- execute cpu' (addI t2 t2 21)
-            execute cpu'' (mul t0 t1 t2)
+        instrs = [addI t1 t1 2, addI t2 t2 21, mul t0 t1 t2]
+        dmem = []
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        rf = regFile $ last dps
     in
-        case result of
-            Right cpu' -> Right $ regs cpu' ! t0
-            Left err   -> Left err
+        getRegisterValue t0 rf
 
-testSWM = TestCase $ assertEqual "t1 <- 42, data[4] = @t1, @data[4]" (Right 42) $
+testSWM = TestCase $ assertEqual "t1 <- 42, data[4] = @t1, @data[4]" (42) $
     let
-        result = do
-            cpu' <- execute cpu (addI t1 t1 42)
-            execute cpu' (swm t1 zero 4)
+        instrs = [addI t1 t1 42, swm t1 zero 4]
+        dmem = []
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        dmem' = dMem $ last dps
     in
-        case result of
-            Right cpu' -> Right $ dMem cpu' ! 4
-            Left err   -> Left err
+        getData 4 dmem'
 
-testLWM = TestCase $ assertEqual "data[4] = 42, t1 <- @data[4]" (Right 42) $
+testLWM = TestCase $ assertEqual "data[4] = 42, t1 <- @data[4]" (42) $
     let
-        result = do
-            cpu' <- execute cpu (addI t2 t2 42)
-            cpu'' <- execute cpu' (swm t2 zero 4)
-            execute cpu'' (lwm t1 zero 4)
+        instrs = [addI t2 t2 42, swm t2 zero 4, lwm t1 zero 4]
+        dmem = []
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        rf = regFile $ last dps
     in
-        case result of
-            Right cpu' -> Right $ regs cpu' ! t1
-            Left err   -> Left err
+        getRegisterValue t1 rf
 
-testSWO = TestCase $ assertEqual "data[4] = 42, out[4] = @data[4]" (Right 42) $
+testSWO = TestCase $ assertEqual "t1 <- 42, data[0] = @t1, out[0] = @data[0]" ([(0, 42), (1, 52), (2, 32)]) $
     let
-        result = do
-            cpu' <- execute cpu (addI t1 t1 42)
-            cpu'' <- execute cpu' (addI t2 t2 4)
-            cpu''' <- execute cpu'' (swm t1 t2 0)
-            execute cpu''' (swo t2 zero 4)
+        instrs = [swo zero 0, swo zero 1, swo zero 2]
+        dmem = [42, 52, 32]
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        dev = ioDev $ last dps
     in
-        case result of
-            Right cpu' -> Right $ outMem cpu' ! 4
-            Left err   -> Left err
+        assocs $ outStorage dev
 
-testLWI = TestCase $ assertEqual "data[16] = 42, t1 <- @data[16]" (Right 42) $
+testLWI = TestCase $ assertEqual "data[] = 42, t1 <- @data[16]" [(0, 72), (1, 101), (2, 108)] $
     let
-        cpu' = Emulator.setInMem cpu [-1, 2, 9, 128, 42, 15]
-        result = do
-            execute cpu' (lwi zero zero 16)
+        instrs = [lwi zero 0, lwi zero 1, lwi zero 2]
+        dmem = []
+        imem = [72, 101, 108, 108, 111, 44, 32, 87, 111, 114, 108, 100, 33]
+        (dps, result) = simulate instrs dmem imem
+        dmem' = dStorage $ dMem $ last dps
     in
-        case result of
-            Right cpu'' -> Right $ dMem cpu'' ! 0
-            Left err    -> Left err
+        assocs dmem'
 
-testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" (Right 42) $
+testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" (42) $
     let
-        result = do
-            cpu' <- execute cpu (addI t1 t1 4)
-            execute cpu' (jmp t1 38)
+        instrs = [addI t1 t1 4, jmp t1 38]
+        dmem = []
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        pC = DataPath.pc $ last dps
     in
-        case result of
-            Right cpu' -> Right $ regs cpu' ! pc
-            Left err   -> Left err
+        pC
 
 tests =
+    TestList
     [
         TestLabel "Test AddI" testAddI,
         TestLabel "Test Mul" testMul,
@@ -89,3 +88,6 @@ tests =
         TestLabel "Test LWI" testLWI,
         TestLabel "Test Jump" testJump
     ]
+
+main:: IO Counts
+main = runTestTT tests

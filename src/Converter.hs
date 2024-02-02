@@ -46,10 +46,7 @@ toRealHelper (ISA.PseudoLabelCall name : xs) mp addr topLabel =
         case labelAddr of
             Nothing -> error $ "No label with name " ++ name'
             Just address ->
-                let
-                    diff = address - addr - 4
-                in
-                    toRealHelper (ISA.PseudoCall ISA.zero diff : xs) mp addr topLabel
+                    toRealHelper (ISA.PseudoCall ISA.zero address : xs) mp addr topLabel
 
 toRealHelper (ISA.PseudoJump _ name : xs) mp addr topLabel =
     let
@@ -61,10 +58,7 @@ toRealHelper (ISA.PseudoJump _ name : xs) mp addr topLabel =
         case labelAddr of
             Nothing -> error $ "No label with name " ++ name'
             Just address ->
-                    let
-                        diff = address - addr - 4
-                    in
-                        ISA.jmp ISA.zero diff : toRealHelper xs mp (addr + 4) topLabel
+                ISA.jmp ISA.zero address : toRealHelper xs mp (addr + 4) topLabel
 
 toRealHelper (ISA.PseudoBranch opcode rd rs1 rs2 name : xs) mp addr topLabel =
     let

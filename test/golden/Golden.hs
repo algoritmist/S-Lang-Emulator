@@ -6,29 +6,29 @@ import           Text.Parsec.Prim  (parse)
 
 import           Data.Char         (chr, ord)
 import           Data.Map          (elems)
-import qualified Emulator
-import qualified EmulatorLib
-import qualified SlangLib
-import RealLib
+import qualified AsmLib
+import qualified TranslatorLib
+import EmulatorLib
 
 main :: IO ()
 main = defaultMain =<< goldenTests
 
 execute srcFile inFile outFile = do
   libContents <- readFile "src/Prelude.asm"
-  case parse EmulatorLib.program "src/Prelude.asm" libContents of
+  case parse AsmLib.program "src/Prelude.asm" libContents of
     Left err -> print err
     Right libInstructions -> do
       srcContents <- readFile srcFile
       inContents <- readFile inFile
+      let src = "Source: |-\n" ++ srcContents ++ "\n"
       let inMem = map ord inContents
-      let result = parse SlangLib.program srcFile srcContents
+      let result = parse TranslatorLib.program srcFile srcContents
       case result of
         Left err -> writeFile outFile $ show err
         Right program -> do
-          let (instructions, dt) = SlangLib.tranlsate program
+          let (instructions, dt) = TranslatorLib.tranlsate program
           let instructions' = instructions ++ libInstructions
-          let realInstructions = EmulatorLib.convert instructions'
+          let realInstructions = AsmLib.convert instructions'
           let (cpus, code) = simulate realInstructions dt inMem
           --writeFile outFile code
           let cpus' = take 100 cpus
@@ -37,7 +37,21 @@ execute srcFile inFile outFile = do
           let instructionsOut = "Instructions: |-\n" ++ concatMap (\x -> show x ++ "\n") instructions' ++ "\n"
           let stdin = "Stdin: |-\n" ++ inContents
           let instrTotal = "Total: |-\n" ++ show (length cpus) ++ " instructions executed"
-          writeFile outFile $ instructionsOut ++ stdin ++ "\nTicks: |-\n" ++ outCpus ++ "\nStdout: |-\n" ++ outMem ++ "\n" ++ instrTotal ++ "\n"
+          writeFile outFile $ foldl (++) []
+            [
+              src,
+              instructionsOut,
+              stdin,
+              "\nTicks: |-\n",
+              outCpus,
+              "\nExit code: |-\n",
+              code, "\nStdout: |-\n",
+              outMem,
+              "\n",
+              instrTotal ,
+              "\n"
+            ]
+
 goldenTests :: IO TestTree
 goldenTests = do
   slangFiles <- findByExtension [".sl"] "golden"

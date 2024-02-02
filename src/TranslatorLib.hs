@@ -1,4 +1,4 @@
-module SlangLib where
+module TranslatorLib where
 import qualified LanguageParser (program)
 import qualified Translator     (translate)
 
