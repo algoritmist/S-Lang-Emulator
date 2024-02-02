@@ -1,4 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE TupleSections  #-}
 module DataPath where
 import           Data.Bits (shiftR)
 import           Data.List (intercalate)
@@ -51,7 +52,7 @@ initDecoder =
     Decoder
     {
         instruction = Nop,
-        opcode = (-1),
+        opcode = -1,
         rs1 = zero,
         rs2 = zero,
         rd = zero,
@@ -307,7 +308,7 @@ decode instr@SavePC cu decoder =
         (cu', decoder')
 setBranchSignal :: Decoder -> ALU -> ControlUnit -> ControlUnit
 setBranchSignal decoder alu cu =
-    if sigJB cu == False then cu
+    if not (sigJB cu) then cu
     else
         let
             op = opcode decoder
@@ -342,7 +343,7 @@ initRegisterFile =
         a3 = zero,
         we1 = False,
         wr = 0,
-        rStorage = insert ISA.sp 4096 (fromList (zip ISA.gpRegs (repeat 0))),
+        rStorage = insert ISA.sp 4096 (fromList (map (, 0) ISA.gpRegs)),
         aluOp = (+)
     }
 
@@ -542,7 +543,7 @@ instance Show DataPath where
         intercalate  ", "
             [
                 padR 10 ("pc: " ++ show pc),
-                padR 30 ("instruction: "  ++ show(iStorage instrMem ! (shift3 pc))),
+                padR 30 ("instruction: "  ++ show (iStorage instrMem ! shift3 pc)),
                 showYaml (assocs $ rStorage regFile),
                 show ioDev
             ]
@@ -564,9 +565,10 @@ instructionDecode (cu, dp@DataPath{regFile, instrMem, brAlu, pcAlu, decoder}) = 
     let (cu', decoder') = decode instr cu decoder
     let brAlu' = brAlu {srcA = immB decoder', srcB = aluOut pcAlu}
     let regFile' = regFile{a1 = rs1 decoder', a2 = rs2 decoder', a3 = rd decoder', we1 = sigWE1 cu', aluOp = rOp decoder'}
-    case sigHalt cu' of
-        False -> Right (cu', dp{regFile = regFile', brAlu = brAlu', decoder = decoder'})
-        True -> Left "Halt: Stopping execution"
+    if sigHalt cu' then
+        Left "Halt: Stopping execution"
+    else
+        Right (cu', dp{regFile = regFile', brAlu = brAlu', decoder = decoder'})
 
 execute :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
 execute (cu, dp@DataPath{pc, regFile, decoder, ioDev, brAlu, jmpAlu, pcAlu}) = do
@@ -634,3 +636,4 @@ simulate instrs dm im =
         (dps, result) = ticks (cu, dp)
     in
         (dp : dps, result)
+

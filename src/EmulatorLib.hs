@@ -1,6 +1,6 @@
 module EmulatorLib where
-import qualified DataPath(simulate)
-import DataPath(outStorage, ioDev, DataPath)
+import           DataPath (DataPath, ioDev, outStorage)
+import qualified DataPath (simulate)
 
 simulate = DataPath.simulate
 
