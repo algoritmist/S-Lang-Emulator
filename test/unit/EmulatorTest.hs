@@ -1,13 +1,11 @@
-{-# LANGUAGE NamedFieldPuns #-}
-
 module Main where
-import           Data.Map   (fromList, (!), elems, assocs)
+import           Data.Map   (assocs, elems, fromList, (!))
 import           DataPath
 import           ISA
 import           Test.HUnit
 
 testAddI :: Test
-testAddI = TestCase $ assertEqual "add t0 t0 42" (42) $
+testAddI = TestCase $ assertEqual "add t0 t0 42" 42 $
     let
         instrs = [addI t0 t0 42]
         dmem = []
@@ -17,7 +15,7 @@ testAddI = TestCase $ assertEqual "add t0 t0 42" (42) $
     in
         getRegisterValue t0 rf
 
-testMul = TestCase $ assertEqual "t1 <- 2, t2 <- 21, mul t0 t1 t2" (42) $
+testMul = TestCase $ assertEqual "t1 <- 2, t2 <- 21, mul t0 t1 t2" 42 $
     let
         instrs = [addI t1 t1 2, addI t2 t2 21, mul t0 t1 t2]
         dmem = []
@@ -27,7 +25,7 @@ testMul = TestCase $ assertEqual "t1 <- 2, t2 <- 21, mul t0 t1 t2" (42) $
     in
         getRegisterValue t0 rf
 
-testSWM = TestCase $ assertEqual "t1 <- 42, data[4] = @t1, @data[4]" (42) $
+testSWM = TestCase $ assertEqual "t1 <- 42, data[4] = @t1, @data[4]" 42 $
     let
         instrs = [addI t1 t1 42, swm t1 zero 4]
         dmem = []
@@ -37,7 +35,7 @@ testSWM = TestCase $ assertEqual "t1 <- 42, data[4] = @t1, @data[4]" (42) $
     in
         getData 4 dmem'
 
-testLWM = TestCase $ assertEqual "data[4] = 42, t1 <- @data[4]" (42) $
+testLWM = TestCase $ assertEqual "data[4] = 42, t1 <- @data[4]" 42 $
     let
         instrs = [addI t2 t2 42, swm t2 zero 4, lwm t1 zero 4]
         dmem = []
@@ -47,7 +45,7 @@ testLWM = TestCase $ assertEqual "data[4] = 42, t1 <- @data[4]" (42) $
     in
         getRegisterValue t1 rf
 
-testSWO = TestCase $ assertEqual "t1 <- 42, data[0] = @t1, out[0] = @data[0]" ([(0, 42), (1, 52), (2, 32)]) $
+testSWO = TestCase $ assertEqual "t1 <- 42, data[0] = @t1, out[0] = @data[0]" [(0, 42), (1, 52), (2, 32)] $
     let
         instrs = [swo zero 0, swo zero 1, swo zero 2]
         dmem = [42, 52, 32]
@@ -67,7 +65,7 @@ testLWI = TestCase $ assertEqual "data[] = 42, t1 <- @data[16]" [(0, 72), (1, 10
     in
         assocs dmem'
 
-testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" (42) $
+testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" 42 $
     let
         instrs = [addI t1 t1 4, jmp t1 38]
         dmem = []
