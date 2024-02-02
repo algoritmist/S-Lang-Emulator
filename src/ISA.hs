@@ -98,7 +98,7 @@ III-type: imm - 27 bit signed, opcode - 5 bit
 
 data Instruction =
     MathOp Opcode Rd Rs1 Rs2 Imm |
-    Branch    Opcode Rd Rs1 Rs2 Imm |
+    Branch    Opcode Rs1 Rs2 Imm |
     RegisterMemory Opcode Rd Rs1 Imm |
     MemoryMemory Opcode Rs1 Imm |
     MathImmideate Opcode Rd Rs1 Imm |
@@ -108,7 +108,7 @@ data Instruction =
     Halt |
     SavePC |
     Label Name |
-    PseudoBranch Opcode Rd Rs1 Rs2 LabelName |
+    PseudoBranch Opcode Rs1 Rs2 LabelName |
     PseudoJump Opcode LabelName |
     PseudoCall Rd Imm |
     PseudoLabelCall LabelName
@@ -126,7 +126,7 @@ instance Show Instruction where
                 _ -> error $ "Error: unknown MathOp with op = " ++ show op
         in
             prefix ++ " " ++ show rd ++ " " ++ show rs1 ++ " " ++ show rs2
-    show(Branch op _ rs1 rs2 imm) =
+    show(Branch op rs1 rs2 imm) =
         let
             prefix = case op of
                 4 -> "je"
@@ -168,7 +168,7 @@ instance Show Instruction where
     show Nop = "nop"
     show Halt = "halt"
     show (Label name) = name ++ ":"
-    show (PseudoBranch op _ rs1 rs2 label) =
+    show (PseudoBranch op rs1 rs2 label) =
         let
             prefix = case op of
                 4 -> "jel"
@@ -196,13 +196,13 @@ mod :: Rd -> Rs1 -> Rs2 -> Instruction
 mod rd rs1 rs2 = MathOp 8 rd rs1 rs2 0
 -- Branch instructions
 je :: Rs1 -> Rs2 -> Imm -> Instruction
-je = Branch 4 pc -- if(@rs1 == @rs2) pc <- pc + imm
+je = Branch 4 -- if(@rs1 == @rs2) pc <- pc + imm
 jne :: Rs1 -> Rs2 -> Imm -> Instruction
-jne = Branch 5 pc
+jne = Branch 5
 jg :: Rs1 -> Rs2 -> Imm -> Instruction
-jg = Branch 6 pc
+jg = Branch 6
 jl :: Rs1 -> Rs2 -> Imm -> Instruction
-jl = Branch 7 pc
+jl = Branch 7
 jmp :: Rd -> Imm -> Instruction
 jmp = Jump 31
 
@@ -242,12 +242,12 @@ call rd imm =  push ra ++ [SavePC, jmp rd imm] ++ pop ra
 
 -- Pseudo branch instructions
 jel :: Rs1 -> Rs2 -> LabelName -> Instruction
-jel = PseudoBranch 4 pc
+jel = PseudoBranch 4
 jnel :: Rs1 -> Rs2 -> LabelName -> Instruction
-jnel = PseudoBranch 5 pc
+jnel = PseudoBranch 5
 jgl :: Rs1 -> Rs2 -> LabelName -> Instruction
-jgl = PseudoBranch 6 pc
+jgl = PseudoBranch 6
 jll :: Rs1 -> Rs2 -> LabelName -> Instruction
-jll = PseudoBranch 7 pc
+jll = PseudoBranch 7
 jmpl :: LabelName -> Instruction
 jmpl = PseudoJump 31

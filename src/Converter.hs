@@ -60,7 +60,7 @@ toRealHelper (ISA.PseudoJump _ name : xs) mp addr topLabel =
             Just address ->
                 ISA.jmp ISA.zero address : toRealHelper xs mp (addr + wordSize) topLabel
 
-toRealHelper (ISA.PseudoBranch opcode rd rs1 rs2 name : xs) mp addr topLabel =
+toRealHelper (ISA.PseudoBranch opcode rs1 rs2 name : xs) mp addr topLabel =
     let
         name' = case name of
             '_':local -> topLabel ++ '.' : local
@@ -73,7 +73,7 @@ toRealHelper (ISA.PseudoBranch opcode rd rs1 rs2 name : xs) mp addr topLabel =
                     let
                         diff = address - addr - wordSize
                     in
-                        ISA.Branch opcode rd rs1 rs2 diff : toRealHelper xs mp (addr + wordSize) topLabel
+                        ISA.Branch opcode rs1 rs2 diff : toRealHelper xs mp (addr + wordSize) topLabel
 
 toRealHelper (x:xs) mp addr topLabel = x : toRealHelper xs mp (addr + wordSize) topLabel
 toRealHelper [] _ _ _ = []

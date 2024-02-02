@@ -201,7 +201,7 @@ decode instr@(MemoryMemory 23 rs1 imm) decoder =
     in
         (cu', decoder')
 
-decode instr@(Branch op _ rs1 rs2 imm) decoder =
+decode instr@(Branch op rs1 rs2 imm) decoder =
     let
         cu' =
             ControlUnit
