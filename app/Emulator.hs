@@ -19,8 +19,8 @@ main = do
         let [instructionFile, dataFile, inputFile, outputFile] = args
         let libPath = "src/Prelude.asm"
         libContents <- readFile libPath
-        instructionContents <- readFile instructionFile ++ libContents
-        let instructionMemory' = convert <$> parse program instructionFile instructionContents
+        instructionContents <- readFile instructionFile
+        let instructionMemory' = convert <$> parse program instructionFile (instructionContents ++ libContents)
         dContents <- readFile dataFile
         let dMemory = map (\x -> read x :: Int) $ lines dContents
         inContents <- readFile inputFile

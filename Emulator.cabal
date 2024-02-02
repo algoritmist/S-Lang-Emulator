@@ -25,10 +25,10 @@ source-repository head
 
 library
   exposed-modules:
-        AsmLib
+        ISA
+      , AsmLib
       , TranslatorLib
       , EmulatorLib
-      , ISA
       , DataPath
   other-modules:
       , Parser
@@ -51,8 +51,8 @@ library
     , containers
   default-language: Haskell2010
 
-executable RealEmulator-exe
-  main-is: RealEmulator.hs
+executable Emulator-exe
+  main-is: Emulator.hs
   other-modules:
       Paths_Emulator
   autogen-modules:
@@ -69,15 +69,15 @@ executable RealEmulator-exe
     , containers
   default-language: Haskell2010
 
-executable Emulator-exe
-  main-is: CPUEmulator.hs
+executable Emulator-Release-exe
+  main-is: Emulator.hs
   other-modules:
       Paths_Emulator
   autogen-modules:
       Paths_Emulator
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded
   build-depends:
       Emulator
     , parsec
@@ -96,6 +96,24 @@ executable Compiler-exe
   hs-source-dirs:
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , parsec
+    , filepath
+    , regex-tdfa >=1.3.2 && <1.4
+    , base >=4.7 && <5
+    , containers
+  default-language: Haskell2010
+
+executable Compiler-Release-exe
+  main-is: Compiler.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      app
+  ghc-options: -threaded
   build-depends:
       Emulator
     , parsec
@@ -125,6 +143,28 @@ test-suite Golden-tests
     , utf8-string
     , containers
     , base >=4.7 && <5
+
+test-suite Golden-tests-Release
+  type: exitcode-stdio-1.0
+  main-is: Golden.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      test/golden
+  ghc-options: -threaded
+  build-depends:
+      Emulator
+    , tasty-golden >=2.3
+    , tasty, bytestring
+    , filepath
+    , parsec
+    , regex-tdfa >=1.3.2 && <1.4
+    , utf8-string
+    , containers
+    , base >=4.7 && <5
+
 test-suite Unit-tests
   type: exitcode-stdio-1.0
   main-is: EmulatorTest.hs
@@ -135,6 +175,23 @@ test-suite Unit-tests
   hs-source-dirs:
       test/unit
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , containers
+    , HUnit >= 1.6
+    , base >=4.7 && <5
+  default-language: Haskell2010
+
+test-suite Unit-tests-Release
+  type: exitcode-stdio-1.0
+  main-is: EmulatorTest.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      test/unit
+  ghc-options: -threaded
   build-depends:
       Emulator
     , containers

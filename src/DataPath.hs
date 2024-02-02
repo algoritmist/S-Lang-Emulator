@@ -11,8 +11,11 @@ import           Utils
 
 
 
+wordSize :: Int
 wordSize = 4
+shft :: Int
 shft = 2
+maxOffset :: Int
 maxOffset = 4100
 
 data InstructionMemory =
@@ -22,10 +25,12 @@ data InstructionMemory =
         iStorage :: Map Int Instruction
     }
 
+initInstructionMemory :: [ISA.Instruction] -> InstructionMemory
 initInstructionMemory instrs =
     InstructionMemory
     {
-        iStorage = fromList $ zip [0..] instrs
+        iStorage = fromList $ zip [0..] instrs,
+        addr = 0
     }
 
 rd0 :: InstructionMemory -> Either String Instruction
@@ -47,6 +52,8 @@ data Decoder =
         immJ        :: Int,
         rOp         :: Int -> Int -> Int
     }
+
+initDecoder :: Decoder
 
 initDecoder =
     Decoder
@@ -246,7 +253,7 @@ decode instr@(Jump op rd imm) decoder =
     in
         (cu', decoder')
 
-decode instr@Halt decoder =
+decode Halt decoder =
     let
         cu' =
             ControlUnit
@@ -264,9 +271,9 @@ decode instr@Halt decoder =
                 sigHalt = True
             }
     in
-        (cu', decoder)
+        (cu', decoder{instruction = Halt})
 
-decode instr@Nop decoder =
+decode Nop decoder =
     let
         cu' =
             ControlUnit
@@ -284,9 +291,9 @@ decode instr@Nop decoder =
                 sigHalt = False
             }
     in
-        (cu', decoder)
+        (cu', decoder{instruction = Nop})
 
-decode instr@Ret decoder = decode (ISA.jmp ISA.ra 8) decoder
+decode Ret decoder = decode (ISA.jmp ISA.ra 8) decoder
 
 decode instr@SavePC decoder =
     let
@@ -340,6 +347,7 @@ data RegisterFile =
         aluOp    :: Int -> Int -> Int
     }
 
+initRegisterFile :: RegisterFile
 initRegisterFile =
     RegisterFile
     {
@@ -382,6 +390,7 @@ data DataMemory =
         dStorage :: Map Int Int
     }
 
+initDataMemory :: [Int] -> DataMemory
 initDataMemory dt =
     DataMemory
     {
@@ -544,7 +553,7 @@ initDataPath instrs dm im =
     }
 
 instance Show DataPath where
-    show DataPath{pc, regFile, instrMem, dMem, ioDev} =
+    show DataPath{pc, regFile, instrMem, ioDev} =
         intercalate  ", "
             [
                 padR 10 ("pc: " ++ show pc),

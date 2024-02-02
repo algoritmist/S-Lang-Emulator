@@ -31,8 +31,11 @@ jobs:
         uses: actions/checkout@v3
       - run: cabal update
       - name: Build
-        run: cabal build
+        run: cabal build Compiler-Release-exe
+        run: cabal build Emulator-Release-exe
+        run: cabal build Unit-tests-Release
+        run: cabal run Golden-tests-Release
       - name: Unit-tests
-        run: cabal run Unit-tests
+        run: cabal run Unit-tests-Release
       - name: Golden-tests
-        run: cabal run Golden-tests
+        run: cabal run Golden-tests-Release
