@@ -167,11 +167,10 @@ Slang golden tests
 
 All 4 tests passed (0.04s)
 ```
-
 ## Алгоритмы
 
-| ФИО                          | Алг   | LoC  | code байт | code инстр. | инстр. | такт.                                                                                 | вариант |
-| ---------------------------- | ----- | ---- | --------- | ----------- | ------ | ------------------------------------------------------------------------------------- |
-| Баранов Вячеслав Григорьевич | hello | 944  | 118       | 108         | 108    | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
-| Баранов Вячеслав Григорьевич | cat   | 516  | 129       | 115         | 115    | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
-| Баранов Вячеслав Григорьевич | prob5 | 2856 | 357       | 7693        | 7693   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
+| ФИО                          | Алг   | LoC | code байт | code инстр. | инстр. | такт. | вариант                                                                               |   |   |
+|------------------------------|-------|-----|-----------|-------------|--------|-------|---------------------------------------------------------------------------------------|---|---|
+| Баранов Вячеслав Григорьевич | hello | 1   | 944       | 118         | 108    | 108   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |   |   |
+| Баранов Вячеслав Григорьевич | cat   | 1   | 516       | 129         | 115    | 115   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |   |   |
+| Баранов Вячеслав Григорьевич | prob5 | 4   | 2856      | 357         | 7693   | 7693  | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
