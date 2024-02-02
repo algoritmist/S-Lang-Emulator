@@ -28,7 +28,6 @@ Primitive ::= Int | String | List | Bool
 ```Haskell
 [T] - список элементов типа T, (T) - кортеж элементов типа T
 ```
-Подробнее c синтаксисом языка можно ознакомиться можно ![здесь]()
 
 Cтоит отметить, что язык не поддерживает pattern-matching, а работа со списками осуществляется с помощью функций из стандартной библиотеки языка. Такое решение было принято для того, чтобы не переусложнять логику компилятора.
 
@@ -74,7 +73,7 @@ TBD* Можно написать транслятор для ассемблер�
 Для настройки CI я использовал github actions:
 ```jaml
 jobs:
-  build-and-test:
+  lint:
     runs-on: ubuntu-latest
     container: haskell:9.4.8-buster
     steps:
@@ -88,11 +87,20 @@ jobs:
         uses: haskell-actions/hlint-run@v2
         with:
           path: '["src/", "test/"]'
-          fail-on: warning
+          fail-on: error
+  build-and-test:
+    runs-on: ubuntu-latest
+    container: haskell:9.4.8-buster
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: cabal update
       - name: Build
-        run: cabal build
-      - name: Test
-        run: cabal run Emulator-test
+        run: cabal build Compiler-Release-exe Emulator-Release-exe Unit-tests-Release Golden-tests-Release
+      - name: Unit-tests
+        run: cabal run Unit-tests-Release
+      - name: Golden-tests
+        run: cabal run Golden-tests-Release
 ```
 где:
 1. ```hlint``` -- линтер для Haskell
@@ -102,10 +110,66 @@ jobs:
 Для удобства я также настроил пре-коммит хуки с использованием форматера, запуском линтера и тестов. Ознакомитьс можно [тут](.pre-commit-config.yaml)
 
 Журнал работы процессора на примере ```cat```:
+```
+Ticks: |-
+pc: 0     , instruction: swm ra sp 0      , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4096, tr: 0, rin : 0, rout: 0
+pc: 8     , instruction: subI sp sp 1     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4096, tr: 0, rin : 0, rout: 0
+pc: 16    , instruction: savePC           , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4095, tr: 0, rin : 0, rout: 0
+pc: 24    , instruction: jump zero 56     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 0
+pc: 56    , instruction: nop              , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 0
+pc: 64    , instruction: addI t0 zero 0   , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 0
+pc: 72    , instruction: add t1 a0 zero   , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 0
+pc: 80    , instruction: swm t0 sp 0      , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 0
+pc: 88    , instruction: subI sp sp 1     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 0
+pc: 96    , instruction: add a0 t0 zero   , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0, rin : 0, rout: 0
+pc: 104   , instruction: swm ra sp 0      , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0, rin : 0, rout: 0
+pc: 112   , instruction: subI sp sp 1     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0, rin : 0, rout: 0
+pc: 120   , instruction: savePC           , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 128   , instruction: jump zero 288    , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 288   , instruction: nop              , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 296   , instruction: lwm t0 a0 0      , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 304   , instruction: nop              , t0: 1 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 312   , instruction: je t0 zero 32    , t0: 1 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 320   , instruction: addI a0 a0 1     , t0: 1 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 328   , instruction: swo a0 0         , t0: 1 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 0
+pc: 336   , instruction: subI t0 t0 1     , t0: 1 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 344   , instruction: jump zero 304    , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 304   , instruction: nop              , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 312   , instruction: je t0 zero 32    , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 352   , instruction: nop              , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 360   , instruction: addI dr dr 1     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 368   , instruction: ret              , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 136   , instruction: addI sp sp 1     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 120, sp: 4093, tr: 0, rin : 0, rout: 8
+pc: 144   , instruction: lwm ra sp 0      , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 120, sp: 4094, tr: 0, rin : 0, rout: 8
+pc: 152   , instruction: addI sp sp 1     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 16, sp: 4094, tr: 0, rin : 0, rout: 8
+pc: 160   , instruction: lwm t0 sp 0      , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 8
+pc: 168   , instruction: add a0 a0 zero   , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 8
+pc: 176   , instruction: ret              , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 8
+pc: 32    , instruction: addI sp sp 1     , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 16, sp: 4095, tr: 0, rin : 0, rout: 8
+pc: 40    , instruction: lwm ra sp 0      , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 16, sp: 4096, tr: 0, rin : 0, rout: 8
+pc: 48    , instruction: halt             , t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 1 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 1 , ra: 0 , sp: 4096, tr: 0, rin : 0, rout: 8
 
-TBD
+Exit code: |-
+Halt: Stopping execution
+Stdout: |-
+H
+Total: |-
+36 instructions executed
+```
 Пример проверки исходного кода:
+```bash
+$ cabal run Golden-tests
+Slang golden tests
+  hello: OK
+  fact:  OK
+  cat:   OK
+  prob5: OK (0.04s)
 
-TBD
+All 4 tests passed (0.04s)
+```
 ## Алгоритмы
-TBD
+| ФИО                          | Алг   | LoC  | code байт | code инстр. | инстр. | такт.                                                                                 | вариант |
+| ---------------------------- | ----- | ---- | --------- | ----------- | ------ | ------------------------------------------------------------------------------------- |
+| Баранов Вячеслав Григорьевич | hello | 944  | 118       | 108         | 108    | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
+| Баранов Вячеслав Григорьевич | cat   | 516  | 129       | 115         | 115    | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
+| Баранов Вячеслав Григорьевич | prob5 | 2856 | 357       | 7693        | 7693   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
