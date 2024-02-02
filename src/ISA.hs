@@ -4,6 +4,13 @@ import           Data.List (find)
 
 type Name = String
 
+wordSize :: Int
+wordSize = 8
+shft :: Int
+shft = 3
+maxOffset :: Int
+maxOffset = 4100
+
 data Register = Register{rType :: RegisterType, name :: Name} deriving(Ord, Eq)
 data RegisterType = Temporary | Argument | Saved | Virtual | Hardwired | Special deriving(Ord, Eq)
 

@@ -1,5 +1,6 @@
 module Converter(toReal) where
 import           Data.Map as Map (Map, empty, insert, lookup)
+import           ISA      (wordSize)
 import qualified ISA
 toReal :: [ISA.Instruction] -> [ISA.Instruction]
 toReal xs = toRealHelper xs (buildMap xs) 0 ""
@@ -18,17 +19,17 @@ buildMapHelper addr (ISA.Label name : xs) mp topLabel =
         topLabel' = if head name == '_' then topLabel else name
         mp' = Map.insert name' addr mp
     in
-        buildMapHelper (addr + 4) xs mp' topLabel'
-buildMapHelper addr (ISA.PseudoCall _ _ : xs) mp topLabel = buildMapHelper (addr + 20 + 4) xs mp topLabel
-buildMapHelper addr (ISA.PseudoLabelCall _ : xs) mp topLabel = buildMapHelper (addr + 20 + 4) xs mp topLabel
-buildMapHelper addr (_:xs) mp topLabel = buildMapHelper (addr + 4) xs mp topLabel
+        buildMapHelper (addr + wordSize) xs mp' topLabel'
+buildMapHelper addr (ISA.PseudoCall _ _ : xs) mp topLabel = buildMapHelper (addr + 5 * wordSize + wordSize) xs mp topLabel
+buildMapHelper addr (ISA.PseudoLabelCall _ : xs) mp topLabel = buildMapHelper (addr + 5 * wordSize + wordSize) xs mp topLabel
+buildMapHelper addr (_:xs) mp topLabel = buildMapHelper (addr + wordSize) xs mp topLabel
 buildMapHelper _ [] mp _ = mp
 
 
 toRealHelper :: [ISA.Instruction] -> LabelMap -> Int -> ISA.LabelName -> [ISA.Instruction]
 
 toRealHelper (ISA.Label name : xs) mp addr topLabel =
-    ISA.Nop : toRealHelper xs mp (addr + 4) (if head name == '_' then topLabel else name)
+    ISA.Nop : toRealHelper xs mp (addr + wordSize) (if head name == '_' then topLabel else name)
 toRealHelper (ISA.PseudoCall rd imm : xs) mp addr topLabel =
     let
         instructions = ISA.call rd imm
@@ -57,7 +58,7 @@ toRealHelper (ISA.PseudoJump _ name : xs) mp addr topLabel =
         case labelAddr of
             Nothing -> error $ "No label with name " ++ name'
             Just address ->
-                ISA.jmp ISA.zero address : toRealHelper xs mp (addr + 4) topLabel
+                ISA.jmp ISA.zero address : toRealHelper xs mp (addr + wordSize) topLabel
 
 toRealHelper (ISA.PseudoBranch opcode rd rs1 rs2 name : xs) mp addr topLabel =
     let
@@ -70,10 +71,10 @@ toRealHelper (ISA.PseudoBranch opcode rd rs1 rs2 name : xs) mp addr topLabel =
             Nothing -> error $ "No label with name " ++ name'
             Just address ->
                     let
-                        diff = address - addr - 4
+                        diff = address - addr - wordSize
                     in
-                        ISA.Branch opcode rd rs1 rs2 diff : toRealHelper xs mp (addr + 4) topLabel
+                        ISA.Branch opcode rd rs1 rs2 diff : toRealHelper xs mp (addr + wordSize) topLabel
 
-toRealHelper (x:xs) mp addr topLabel = x : toRealHelper xs mp (addr + 4) topLabel
+toRealHelper (x:xs) mp addr topLabel = x : toRealHelper xs mp (addr + wordSize) topLabel
 toRealHelper [] _ _ _ = []
 

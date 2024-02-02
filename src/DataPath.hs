@@ -5,18 +5,9 @@ import           Data.Bits (shiftR)
 import           Data.List (intercalate)
 import           Data.Map  (Map, assocs, empty, fromList, insert, (!))
 import qualified Data.Map  as Map (lookup)
-import           ISA       (Instruction (Branch, Halt, Jump, MathImmideate, MathOp, MemoryMemory, Nop, RegisterMemory, Ret, SavePC),
-                            Opcode, Register, gpRegs, jmp, ra, sp, zero)
+import           ISA       hiding (a1, a2, a3, pc)
 import           Utils
 
-
-
-wordSize :: Int
-wordSize = 4
-shft :: Int
-shft = 2
-maxOffset :: Int
-maxOffset = 4100
 
 data InstructionMemory =
     InstructionMemory
@@ -293,7 +284,7 @@ decode Nop decoder =
     in
         (cu', decoder{instruction = Nop})
 
-decode Ret decoder = decode (ISA.jmp ISA.ra 8) decoder
+decode Ret decoder = decode (ISA.jmp ISA.ra 16) decoder
 
 decode instr@SavePC decoder =
     let
