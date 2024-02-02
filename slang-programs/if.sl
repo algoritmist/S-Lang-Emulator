@@ -1,1 +1,0 @@
-main() = if 42 == 2 * 20 + 2 then output("42 = 2 * 20 + 2") else output("No");
