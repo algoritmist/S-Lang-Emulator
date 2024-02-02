@@ -13,8 +13,8 @@ VariableDefinition ::= VariableName "=" Expr
 DefinitionArgs ::= (Variable)
 Expr ::= "(" Expr ")" | FunctionCall | LetExpr | IfThenElseExpr | BinOp Expr Expr | UnOp Expr | Primitive
 FunctionCall ::= FunctionName CallArgs
-LetExpr ::= "let" [VariableDefinition] "in" VariableDefinition
-IfThenElseExpr ::= "if" Expr "then" [Expr] | "if" Expr "then" [Expr] "else" [Expr]
+LetExpr ::= "Let" [VariableDefinition] "In" VariableDefinition
+IfThenElseExpr ::= "If" Expr "Then" [Expr] | "If" Expr "Then" [Expr] "Else" [Expr]
 BinOp ::= + | - | * | / | == | > | < | /= | ++
 UnOp ::= - | not | head | tail
 CallArgs ::= (Expr)
