@@ -1,5 +1,4 @@
--- This is an implementation of prob5. More information can be found by the link https://projecteuler.net/problem=5
-
-divisible (x, l, r) = if l == r then True else x mod l == 0 and divisible(x, l+1, r);
-findDiv (x, l, r) = if divisible(x, l, r) then x else findDiv(x + 1, l, r);
-main = print(findDiv(1, 1, 20));
+gcd(x, y) = If x == 0 Then y Else gcd(y % x, x);
+lcm(x, y) = x * y / gcd(x, y);
+findDiv(acc, l, r) = If l == r Then acc Else findDiv(lcm(acc, l), l + 1, r);
+main() = outputInt(findDiv(1, 1, 21));

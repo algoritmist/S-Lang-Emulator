@@ -8,7 +8,7 @@ on:
     branches: ["main", "workflow"]
 
 jobs:
-  build-and-test:
+  lint:
     runs-on: ubuntu-latest
     container: haskell:9.4.8-buster
     steps:
@@ -22,10 +22,17 @@ jobs:
         uses: haskell-actions/hlint-run@v2
         with:
           path: '["src/", "test/"]'
-          fail-on: warning
+          fail-on: error
+  build-and-test:
+    runs-on: ubuntu-latest
+    container: haskell:9.4.8-buster
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: cabal update
       - name: Build
-        run: cabal build
+        run: cabal build Compiler-Release-exe Emulator-Release-exe Unit-tests-Release Golden-tests-Release
       - name: Unit-tests
-        run: cabal run Unit-tests
+        run: cabal run Unit-tests-Release
       - name: Golden-tests
-        run: cabal run Golden-tests
+        run: cabal run Golden-tests-Release

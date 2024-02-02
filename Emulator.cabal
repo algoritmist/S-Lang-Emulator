@@ -25,11 +25,19 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
-      , Emulator
-      , ISA
+        ISA
+      , AsmLib
+      , TranslatorLib
+      , EmulatorLib
+      , DataPath
   other-modules:
-      Paths_Emulator
+      , Parser
+      , Converter
+      , Language
+      , Utils
+      , Translator
+      , LanguageParser
+      , Paths_Emulator
   autogen-modules:
       Paths_Emulator
   hs-source-dirs:
@@ -37,11 +45,14 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , parsec
+    , filepath
+    , regex-tdfa >=1.3.2 && <1.4
     , containers
   default-language: Haskell2010
 
 executable Emulator-exe
-  main-is: Main.hs
+  main-is: Emulator.hs
   other-modules:
       Paths_Emulator
   autogen-modules:
@@ -51,7 +62,65 @@ executable Emulator-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Emulator
+    , parsec
+    , filepath
+    , regex-tdfa >=1.3.2 && <1.4
     , base >=4.7 && <5
+    , containers
+  default-language: Haskell2010
+
+executable Emulator-Release-exe
+  main-is: Emulator.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      app
+  ghc-options: -threaded
+  build-depends:
+      Emulator
+    , parsec
+    , filepath
+    , regex-tdfa >=1.3.2 && <1.4
+    , base >=4.7 && <5
+    , containers
+  default-language: Haskell2010
+
+executable Compiler-exe
+  main-is: Compiler.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , parsec
+    , filepath
+    , regex-tdfa >=1.3.2 && <1.4
+    , base >=4.7 && <5
+    , containers
+  default-language: Haskell2010
+
+executable Compiler-Release-exe
+  main-is: Compiler.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      app
+  ghc-options: -threaded
+  build-depends:
+      Emulator
+    , parsec
+    , filepath
+    , regex-tdfa >=1.3.2 && <1.4
+    , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 test-suite Golden-tests
@@ -69,8 +138,33 @@ test-suite Golden-tests
     , tasty-golden >=2.3
     , tasty, bytestring
     , filepath
+    , parsec
+    , regex-tdfa >=1.3.2 && <1.4
     , utf8-string
+    , containers
     , base >=4.7 && <5
+
+test-suite Golden-tests-Release
+  type: exitcode-stdio-1.0
+  main-is: Golden.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      test/golden
+  ghc-options: -threaded
+  build-depends:
+      Emulator
+    , tasty-golden >=2.3
+    , tasty, bytestring
+    , filepath
+    , parsec
+    , regex-tdfa >=1.3.2 && <1.4
+    , utf8-string
+    , containers
+    , base >=4.7 && <5
+
 test-suite Unit-tests
   type: exitcode-stdio-1.0
   main-is: EmulatorTest.hs
@@ -81,6 +175,23 @@ test-suite Unit-tests
   hs-source-dirs:
       test/unit
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Emulator
+    , containers
+    , HUnit >= 1.6
+    , base >=4.7 && <5
+  default-language: Haskell2010
+
+test-suite Unit-tests-Release
+  type: exitcode-stdio-1.0
+  main-is: EmulatorTest.hs
+  other-modules:
+      Paths_Emulator
+  autogen-modules:
+      Paths_Emulator
+  hs-source-dirs:
+      test/unit
+  ghc-options: -threaded
   build-depends:
       Emulator
     , containers
