@@ -26,6 +26,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     container: haskell:9.4.8-buster
+    steps:
       - name: Build
         run: cabal build
       - name: Unit-tests
