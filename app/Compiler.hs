@@ -1,9 +1,9 @@
 module Main(main) where
-import           SlangLib
 import           System.Environment.Blank (getArgs)
 import           System.FilePath          (replaceExtension, takeBaseName)
 import           System.IO
 import           Text.Parsec.Prim         (parse)
+import           TranslatorLib
 main :: IO ()
 main = do
     args <-  getArgs

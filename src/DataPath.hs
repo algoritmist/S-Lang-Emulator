@@ -1,20 +1,23 @@
 {-# LANGUAGE NamedFieldPuns #-}
 module DataPath where
-import ISA(Instruction, Opcode, Register, Instruction(MathOp, MathImmideate, RegisterMemory, MemoryMemory, Jump, Halt, Branch, Nop, Ret, SavePC), jmp, sp, ra, gpRegs, zero)
-import Data.Map(Map, (!), fromList, insert, empty, assocs)
-import qualified Data.Map as Map(lookup)
-import Data.Bits(shiftR)
-import Data.List(intercalate)
+import           Data.Bits (shiftR)
+import           Data.List (intercalate)
+import           Data.Map  (Map, assocs, empty, fromList, insert, (!))
+import qualified Data.Map  as Map (lookup)
+import           ISA       (Instruction (Branch, Halt, Jump, MathImmideate, MathOp, MemoryMemory, Nop, RegisterMemory, Ret, SavePC),
+                            Opcode, Register, gpRegs, jmp, ra, sp, zero)
+import           Utils
+
 
 
 wordSize = 4
 shft = 2
 maxOffset = 4100
 
-data InstructionMemory = 
-    InstructionMemory 
+data InstructionMemory =
+    InstructionMemory
     {
-        addr :: Int,
+        addr     :: Int,
         iStorage :: Map Int Instruction
     }
 
@@ -26,22 +29,22 @@ initInstructionMemory instrs =
 
 rd0 :: InstructionMemory -> Either String Instruction
 rd0 InstructionMemory{addr, iStorage} = case Map.lookup addr iStorage of
-    Just v -> Right v
+    Just v  -> Right v
     Nothing -> Left "Error: end of instruction memory reached!"
 
-data Decoder = 
-    Decoder 
+data Decoder =
+    Decoder
     {
         instruction :: Instruction,
-        opcode :: Opcode,
-        rs1 :: Register,
-        rs2 :: Register,
-        rd :: Register,
-        immI :: Int,
-        immB :: Int,
-        immR :: Int,
-        immJ :: Int,
-        rOp :: Int -> Int -> Int
+        opcode      :: Opcode,
+        rs1         :: Register,
+        rs2         :: Register,
+        rd          :: Register,
+        immI        :: Int,
+        immB        :: Int,
+        immR        :: Int,
+        immJ        :: Int,
+        rOp         :: Int -> Int -> Int
     }
 
 initDecoder =
@@ -60,9 +63,9 @@ initDecoder =
     }
 
 decode :: Instruction -> ControlUnit -> Decoder -> (ControlUnit, Decoder)
-decode instr@(MathOp op rd rs1 rs2 _) cu decoder = 
+decode instr@(MathOp op rd rs1 rs2 _) cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -86,9 +89,9 @@ decode instr@(MathOp op rd rs1 rs2 _) cu decoder =
         decoder' = decoder{instruction = instr, opcode = op, rs1 = rs1, rs2 = rs2, rd = rd, immI = 0, rOp = operation}
     in
         (cu', decoder')
-decode instr@(MathImmideate op rd rs1 imm) cu decoder = 
+decode instr@(MathImmideate op rd rs1 imm) cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -115,7 +118,7 @@ decode instr@(MathImmideate op rd rs1 imm) cu decoder =
 
 decode instr@(RegisterMemory 20 rd rs1 imm) cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -136,7 +139,7 @@ decode instr@(RegisterMemory 20 rd rs1 imm) cu decoder =
 
 decode instr@(RegisterMemory 21 rd rs1 imm) cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -178,7 +181,7 @@ decode instr@(MemoryMemory 22 rs1 imm) cu decoder =
 
 decode instr@(MemoryMemory 23 rs1 imm) cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -197,9 +200,9 @@ decode instr@(MemoryMemory 23 rs1 imm) cu decoder =
     in
         (cu', decoder')
 
-decode instr@(Branch op _ rs1 rs2 imm) cu decoder = 
+decode instr@(Branch op _ rs1 rs2 imm) cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
 
             {
@@ -221,7 +224,7 @@ decode instr@(Branch op _ rs1 rs2 imm) cu decoder =
 
 decode instr@(Jump op rd imm) cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -241,7 +244,7 @@ decode instr@(Jump op rd imm) cu decoder =
         (cu', decoder')
 
 decode instr@Halt cu decoder =
-    let 
+    let
         cu' =
             ControlUnit
             {
@@ -262,7 +265,7 @@ decode instr@Halt cu decoder =
 
 decode instr@Nop cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -284,7 +287,7 @@ decode instr@Ret cu decoder = decode (ISA.jmp ISA.ra 8) cu decoder
 
 decode instr@SavePC cu decoder =
     let
-        cu' = 
+        cu' =
             ControlUnit
             {
                 sigJB = False,
@@ -319,16 +322,16 @@ setBranchSignal decoder alu cu =
         in
             cu{sigPC = not sig}
 
-data RegisterFile = 
-    RegisterFile 
+data RegisterFile =
+    RegisterFile
     {
-        a1 :: Register,
-        a2 :: Register,
-        a3 :: Register,
-        we1 :: Bool,
-        wr :: Int,
+        a1       :: Register,
+        a2       :: Register,
+        a3       :: Register,
+        we1      :: Bool,
+        wr       :: Int,
         rStorage :: Map Register Int,
-        aluOp :: Int -> Int -> Int
+        aluOp    :: Int -> Int -> Int
     }
 
 initRegisterFile =
@@ -347,15 +350,15 @@ registerAccessError reg = "Error: accessing non-general purpose register " ++ sh
 
 rd1 :: RegisterFile -> Either String Int
 rd1 RegisterFile{a1, rStorage} = case Map.lookup a1 rStorage of
-    Just v -> Right v
+    Just v  -> Right v
     Nothing -> Left $ registerAccessError a1
 rd2 :: RegisterFile -> Either String Int
 rd2 RegisterFile{a2, rStorage} = case Map.lookup a2 rStorage of
-    Just v -> Right v
+    Just v  -> Right v
     Nothing -> Left $ registerAccessError a2
 rd3 :: RegisterFile -> Either String Int
 rd3 RegisterFile{a3, rStorage} = case Map.lookup a3 rStorage of
-    Just v -> Right v
+    Just v  -> Right v
     Nothing -> Left $ registerAccessError a3
 
 getRegisterValue :: Register -> RegisterFile -> Int
@@ -364,12 +367,12 @@ getRegisterValue r f = rStorage f ! r
 writeRegister :: RegisterFile -> RegisterFile
 writeRegister rf@RegisterFile{wr, a3, rStorage, we1} = if we1 && a3 /= zero then rf{rStorage = insert a3 wr rStorage} else rf
 
-data DataMemory = 
+data DataMemory =
     DataMemory
     {
-        wData :: Int,
-        offset :: Int,
-        we2 :: Bool,
+        wData    :: Int,
+        offset   :: Int,
+        we2      :: Bool,
         dStorage :: Map Int Int
     }
 
@@ -381,7 +384,7 @@ initDataMemory dt =
 
 rd4 :: DataMemory -> Either String Int
 rd4 DataMemory{offset, dStorage} = case Map.lookup offset dStorage of
-    Just v -> Right v
+    Just v  -> Right v
     Nothing -> Right 0
 
 getData :: Int -> DataMemory -> Int
@@ -390,20 +393,20 @@ getData offset dm = dStorage dm ! offset
 writeData :: DataMemory -> DataMemory
 writeData dm@DataMemory{wData, offset, we2, dStorage} = if we2 then dm{dStorage = insert offset wData dStorage} else dm
 
-data IODevice = 
+data IODevice =
     IODevice
     {
-        mData :: Int,
-        re :: Bool,
-        we3 :: Bool,
-        inPtr :: Int,
-        outPtr :: Int,
-        inStorage :: Map Int Int,
+        mData      :: Int,
+        re         :: Bool,
+        we3        :: Bool,
+        inPtr      :: Int,
+        outPtr     :: Int,
+        inStorage  :: Map Int Int,
         outStorage :: Map Int Int
     }
 
 initIODevice :: [Int] -> IODevice
-initIODevice im = 
+initIODevice im =
     IODevice
     {
         mData = 0,
@@ -420,7 +423,7 @@ instance Show IODevice where
 
 rd5 :: IODevice -> Either String Int
 rd5 IODevice{inStorage, inPtr} = case Map.lookup (shift3 inPtr) inStorage of
-    Just v -> Right v
+    Just v  -> Right v
     Nothing -> Left "IODevice: Input EOF reached"
 
 readIn :: IODevice -> IODevice
@@ -432,11 +435,11 @@ writeOut dev@IODevice{outStorage, outPtr, mData, we3} = if we3 then dev{outStora
 getOutData :: Int -> IODevice -> Int
 getOutData offset dev = outStorage dev ! offset
 
-data ALU = ALU 
+data ALU = ALU
     {
         srcA :: Int,
         srcB :: Int,
-        op :: Int -> Int -> Int
+        op   :: Int -> Int -> Int
     }
 
 aluOut :: ALU -> Int
@@ -448,10 +451,10 @@ aluZero alu = aluOut alu == 0
 aluNegative :: ALU -> Bool
 aluNegative alu = aluOut alu < 0
 
-data Multiplexor = 
+data Multiplexor =
     Multiplexor
     {
-        sel :: Bool,
+        sel  :: Bool,
         sig0 :: Int,
         sig1 :: Int
     }
@@ -459,19 +462,19 @@ data Multiplexor =
 outSig :: Multiplexor -> Int
 outSig mux = if sel mux then sig1 mux else sig0 mux
 
-data ControlUnit = 
+data ControlUnit =
     ControlUnit
     {
-        sigJB :: Bool,
-        sigPC :: Bool,
-        sigWE1 :: Bool,
-        sigWE2 :: Bool,
-        sigWE3 :: Bool,
-        sigRE :: Bool,
+        sigJB     :: Bool,
+        sigPC     :: Bool,
+        sigWE1    :: Bool,
+        sigWE2    :: Bool,
+        sigWE3    :: Bool,
+        sigRE     :: Bool,
         sigSndSrc :: Bool,
-        sigAmSrc :: Bool,
-        sigRdSrc :: Bool,
-        sigHalt :: Bool,
+        sigAmSrc  :: Bool,
+        sigRdSrc  :: Bool,
+        sigHalt   :: Bool,
         sigFstSrc :: Bool
     }
 
@@ -491,30 +494,30 @@ initControlUnit =
         sigFstSrc = True
     }
 
-data DataPath = 
-    DataPath 
+data DataPath =
+    DataPath
     {
-        pc :: Int,
+        pc       :: Int,
         instrMem :: InstructionMemory,
-        regFile :: RegisterFile,
-        dMem :: DataMemory,
-        decoder :: Decoder,
-        ioDev :: IODevice,
-        mainAlu :: ALU,
-        pcAlu :: ALU,
-        brAlu :: ALU,
-        jmpAlu :: ALU,
-        jbMux :: Multiplexor,
-        pcMux :: Multiplexor,
-        fstMux :: Multiplexor,
-        sndMux :: Multiplexor,
-        amMux :: Multiplexor,
-        rdMux :: Multiplexor
+        regFile  :: RegisterFile,
+        dMem     :: DataMemory,
+        decoder  :: Decoder,
+        ioDev    :: IODevice,
+        mainAlu  :: ALU,
+        pcAlu    :: ALU,
+        brAlu    :: ALU,
+        jmpAlu   :: ALU,
+        jbMux    :: Multiplexor,
+        pcMux    :: Multiplexor,
+        fstMux   :: Multiplexor,
+        sndMux   :: Multiplexor,
+        amMux    :: Multiplexor,
+        rdMux    :: Multiplexor
     }
 
 initDataPath :: [Instruction] -> [Int] -> [Int] -> DataPath
-initDataPath instrs dm im = 
-    DataPath 
+initDataPath instrs dm im =
+    DataPath
     {
         pc = 0,
         instrMem = initInstructionMemory instrs,
@@ -535,24 +538,20 @@ initDataPath instrs dm im =
     }
 
 instance Show DataPath where
-    show DataPath{pc, regFile, instrMem, dMem, ioDev} = 
-        intercalate  ", " 
+    show DataPath{pc, regFile, instrMem, dMem, ioDev} =
+        intercalate  ", "
             [
-                "pc: " ++ show pc,
-                "instruction: "  ++ show(iStorage instrMem ! (shift3 pc)),
+                padR 10 ("pc: " ++ show pc),
+                padR 30 ("instruction: "  ++ show(iStorage instrMem ! (shift3 pc))),
                 showYaml (assocs $ rStorage regFile),
                 show ioDev
             ]
-
-showYaml :: [(Register, Int)] -> String
-showYaml [] = ""
-showYaml ((k, v): xs) = intercalate ", " [show k ++ ": " ++ show v, showYaml xs]
 
 shift3 :: Int -> Int
 shift3 x = x `shiftR` shft
 
 instructionFetch :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
-instructionFetch (cu, dp@DataPath{pc, instrMem, pcAlu}) = 
+instructionFetch (cu, dp@DataPath{pc, instrMem, pcAlu}) =
     let
         pcAlu' = pcAlu {srcA = pc}
         instrMem' = instrMem{addr = shift3 pc}
@@ -565,7 +564,7 @@ instructionDecode (cu, dp@DataPath{regFile, instrMem, brAlu, pcAlu, decoder}) = 
     let (cu', decoder') = decode instr cu decoder
     let brAlu' = brAlu {srcA = immB decoder', srcB = aluOut pcAlu}
     let regFile' = regFile{a1 = rs1 decoder', a2 = rs2 decoder', a3 = rd decoder', we1 = sigWE1 cu', aluOp = rOp decoder'}
-    case sigHalt cu' of 
+    case sigHalt cu' of
         False -> Right (cu', dp{regFile = regFile', brAlu = brAlu', decoder = decoder'})
         True -> Left "Halt: Stopping execution"
 
@@ -585,7 +584,7 @@ execute (cu, dp@DataPath{pc, regFile, decoder, ioDev, brAlu, jmpAlu, pcAlu}) = d
     rd3Value <- rd3 regFile
     rd5Value <- rd5 ioDev
     let rdMux' = Multiplexor{sel = sigRdSrc cu', sig0 = rd3Value, sig1 = rd5Value}
-    Right (cu', 
+    Right (cu',
         dp
         {
             pc = pc',
