@@ -304,7 +304,7 @@ decode instr@SavePC decoder =
                 sigRdSrc = False,
                 sigHalt = False
             }
-        decoder' = decoder{instruction = instr, opcode = 32, rd = ISA.ra, rs1 = ISA.zero, rs2 = ISA.zero, immI = 0}
+        decoder' = decoder{instruction = instr, opcode = 25, rd = ISA.ra, rs1 = ISA.zero, rs2 = ISA.zero, immI = 0}
     in
         (cu', decoder')
 
