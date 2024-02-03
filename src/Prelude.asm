@@ -35,28 +35,28 @@ addLists:
     swm t2 dr 0 # write size of list at the beggining
     _loop1:
         jel t0 zero _loop2
-        addI dr dr 4
-        addI a0 a0 4
+        addI dr dr 1
+        addI a0 a0 1
         lwm tr a0 0
         swm tr dr 0
-        subI t0 t0 4
+        subI t0 t0 1
         jumpl _loop1
     _loop2:
         jel t1 zero _end
-        addI dr dr 4
-        addI a1 a1 4
+        addI dr dr 1
+        addI a1 a1 1
         lwm tr a1 0
         swm tr dr 0
-        subI t1 t1 4
+        subI t1 t1 1
         jumpl _loop2
     _end:
         add a0 t3 zero
-        addI dr dr 4
+        addI dr dr 1
         ret
 
 # takes a0 as address of list and returns a0 as first element of list. List should be valid
 head:
-    lwm a0 a0 4
+    lwm a0 a0 1
     ret
 
 # takes a0 as address of list and returns a0 as address of new list

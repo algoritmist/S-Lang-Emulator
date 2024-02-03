@@ -1,14 +1,13 @@
 import           System.FilePath   (replaceExtension, takeBaseName)
-import           System.IO
 import           Test.Tasty        (TestTree, defaultMain, testGroup)
 import           Test.Tasty.Golden (findByExtension, goldenVsFileDiff)
 import           Text.Parsec.Prim  (parse)
 
+import qualified AsmLib
 import           Data.Char         (chr, ord)
 import           Data.Map          (elems)
-import qualified AsmLib
+import           EmulatorLib
 import qualified TranslatorLib
-import EmulatorLib
 
 main :: IO ()
 main = defaultMain =<< goldenTests
@@ -36,11 +35,13 @@ execute srcFile inFile outFile = do
           let outMem = map chr (elems $ getOutMem $ last cpus)
           let instructionsOut = "Instructions: |-\n" ++ concatMap (\x -> show x ++ "\n") instructions' ++ "\n"
           let stdin = "Stdin: |-\n" ++ inContents
+          let dmem = "Data Memory: |-\n" ++ show dt ++ "\n"
           let instrTotal = "Total: |-\n" ++ show (length cpus) ++ " instructions executed"
-          writeFile outFile $ foldl (++) []
+          writeFile outFile $ concat
             [
               src,
               instructionsOut,
+              dmem,
               stdin,
               "\nTicks: |-\n",
               outCpus,

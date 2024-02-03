@@ -1,11 +1,12 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE TupleSections  #-}
 module DataPath where
-import           Data.Bits (shiftR)
-import           Data.List (intercalate)
-import           Data.Map  (Map, assocs, empty, fromList, insert, (!))
-import qualified Data.Map  as Map (lookup)
-import           ISA       hiding (a1, a2, a3, pc)
+import           Data.Bits  (shiftR)
+import           Data.List  (intercalate)
+import           Data.Map   (Map, assocs, empty, fromList, insert, (!))
+import qualified Data.Map   as Map (lookup)
+import           Data.Maybe (fromMaybe)
+import           ISA        hiding (a1, a2, pc)
 import           Utils
 
 
@@ -338,8 +339,8 @@ data RegisterFile =
         aluOp    :: Int -> Int -> Int
     }
 
-initRegisterFile :: RegisterFile
-initRegisterFile =
+initRegisterFile :: Int -> RegisterFile
+initRegisterFile dmLen =
     RegisterFile
     {
         a1 = zero,
@@ -347,7 +348,7 @@ initRegisterFile =
         a3 = zero,
         we1 = False,
         wr = 0,
-        rStorage = insert ISA.sp 4096 (fromList (map (, 0) ISA.gpRegs)),
+        rStorage = insert ISA.dr dmLen (insert ISA.sp 4096 (fromList (map (, 0) ISA.gpRegs))),
         aluOp = (+)
     }
 
@@ -385,13 +386,14 @@ initDataMemory :: [Int] -> DataMemory
 initDataMemory dt =
     DataMemory
     {
+        wData = 0,
+        offset = 0,
+        we2 = False,
         dStorage = fromList $ zip [0..] dt
     }
 
-rd4 :: DataMemory -> Either String Int
-rd4 DataMemory{offset, dStorage} = case Map.lookup offset dStorage of
-    Just v  -> Right v
-    Nothing -> Right 0
+rd4 :: DataMemory -> Int
+rd4 DataMemory{offset, dStorage} = fromMaybe 0 (Map.lookup offset dStorage)
 
 getData :: Int -> DataMemory -> Int
 getData offset dm = dStorage dm ! offset
@@ -484,6 +486,7 @@ data ControlUnit =
         sigFstSrc :: Bool
     }
 
+initControlUnit :: ControlUnit
 initControlUnit =
     ControlUnit
     {
@@ -527,7 +530,7 @@ initDataPath instrs dm im =
     {
         pc = 0,
         instrMem = initInstructionMemory instrs,
-        regFile = initRegisterFile,
+        regFile = initRegisterFile (length dm),
         dMem = initDataMemory dm,
         decoder = initDecoder,
         ioDev = initIODevice im,
@@ -588,7 +591,6 @@ execute (cu, dp@DataPath{pc, regFile, decoder, ioDev, brAlu, jmpAlu, pcAlu}) = d
     let jbMux' =  Multiplexor{sel = sigJB cu', sig0 = aluOut jmpAlu', sig1 = aluOut brAlu}
     let pcMux' = Multiplexor{sel = sigPC cu', sig0 = outSig jbMux', sig1 = aluOut pcAlu}
     let pc' = outSig pcMux'
-    rd3Value <- rd3 regFile
     rd5Value <- rd5 ioDev
     let rdMux' = Multiplexor{sel = sigRdSrc cu', sig0 = rd3Value, sig1 = rd5Value}
     Right (cu',
@@ -608,13 +610,13 @@ execute (cu, dp@DataPath{pc, regFile, decoder, ioDev, brAlu, jmpAlu, pcAlu}) = d
 accessMemory :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
 accessMemory (cu, dp@DataPath{dMem, mainAlu, rdMux, ioDev}) = do
     let dMem' = writeData dMem{offset = aluOut mainAlu, wData = outSig rdMux, we2 = sigWE2 cu}
-    rd4Value <- rd4 dMem'
+    let rd4Value = rd4 dMem'
     let ioDev' = readIn.writeOut $ ioDev{mData = rd4Value, re = sigRE cu, we3 = sigWE3 cu}
     Right (cu, dp{dMem = dMem', ioDev = ioDev'})
 
 writeBack :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
 writeBack (cu, dp@DataPath{dMem, regFile, mainAlu}) = do
-    rd4Value <- rd4 dMem
+    let rd4Value = rd4 dMem
     let amMux' = Multiplexor{sel = sigAmSrc cu, sig0 = aluOut mainAlu, sig1 = rd4Value}
     let regFile' = writeRegister regFile{wr = outSig amMux'}
     Right (cu, dp{amMux = amMux', regFile = regFile'})

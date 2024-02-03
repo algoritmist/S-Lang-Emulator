@@ -288,26 +288,26 @@ add t2 t0 t1
 swm t2 dr 0
 _loop1:
 jel t0 zero _loop2
-addI dr dr 4
-addI a0 a0 4
+addI dr dr 1
+addI a0 a0 1
 lwm tr a0 0
 swm tr dr 0
-subI t0 t0 4
+subI t0 t0 1
 jumpl _loop1
 _loop2:
 jel t1 zero _end
-addI dr dr 4
-addI a1 a1 4
+addI dr dr 1
+addI a1 a1 1
 lwm tr a1 0
 swm tr dr 0
-subI t1 t1 4
+subI t1 t1 1
 jumpl _loop2
 _end:
 add a0 t3 zero
-addI dr dr 4
+addI dr dr 1
 ret
 head:
-lwm a0 a0 4
+lwm a0 a0 1
 ret
 tail:
 add t3 dr zero
@@ -366,6 +366,8 @@ ret
 id:
 ret
 
+Data Memory: |-
+[]
 Stdin: |-
 x
 Ticks: |-

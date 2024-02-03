@@ -186,6 +186,7 @@ All 4 tests passed (0.04s)
 
 | ФИО                          | Алг   | LoC | code байт | code инстр. | инстр. | такт. | вариант                                                                               |
 |------------------------------|-------|-----|-----------|-------------|--------|-------|---------------------------------------------------------------------------------------|
-| Баранов Вячеслав Григорьевич | hello | 1   | 944       | 118         | 108    | 108   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
-| Баранов Вячеслав Григорьевич | cat   | 1   | 516       | 129         | 115    | 115   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
-| Баранов Вячеслав Григорьевич | prob5 | 4   | 2856      | 357         | 7693   | 7693  | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
+| Баранов Вячеслав Григорьевич | hello      | 1   | 944       | 118         | 108    | 108   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
+| Баранов Вячеслав Григорьевич | cat        | 1   | 516       | 129         | 115    | 115   | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
+| Баранов Вячеслав Григорьевич | hello user | 1   | 1288      | 161         | 301   | 301    | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
+| Баранов Вячеслав Григорьевич | prob5      | 4   | 2856      | 357         | 7693   | 7693  | miranda , risc , harv , hw , instr , struct , stream , port , pstr , prob5 , pipeline |
