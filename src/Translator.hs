@@ -18,7 +18,8 @@ data MemoryMapper =
         dataMap         :: Map [Int] Int,
         drPtr           :: Int,
         varCount        :: Int,
-        generatedLabels :: Int
+        generatedLabels :: Int,
+        usedSaved       :: [Register]
     }
 
 maxArgsError :: Int -> String
@@ -27,7 +28,7 @@ undefinedVariable :: Variable -> String
 undefinedVariable var = "No such variable with name " ++ show var
 
 initDefault :: MemoryMapper
-initDefault = MemoryMapper empty empty 0 0 0
+initDefault = MemoryMapper empty empty 0 0 0 []
 
 saveCaller :: MemoryMapper -> [ISA.Instruction]
 saveCaller MemoryMapper{variableMap} =
@@ -80,9 +81,10 @@ allocVariables mp vars =
     let
         usedRegs = elems $ variableMap mp
         regs = take (length vars) $ sortOn rType $ filter (\r -> notElem r usedRegs && rType r /= Hardwired && rType r /= Special) ISA.registers
+        mp' = mp{usedSaved = usedSaved mp ++ filter (\r -> rType r == Saved) regs}
         funct m (v, r) = assocVariable m v r
     in
-        foldl funct mp $ zip vars regs
+        foldl funct mp' $ zip vars regs
 
 putList :: MemoryMapper -> [Int] -> (MemoryMapper, Int)
 putList mp lst =
@@ -145,14 +147,16 @@ translateHelper mp (EDefinition Language.Function{name, args, expr}) =
         label = ISA.Label name
         mp'' = mapArgs mp' args
         (mp''', var, instructions) = translateHelper mp'' expr
+        pushSaved = concatMap ISA.push $ usedSaved mp'''
+        popSaved = concatMap ISA.pop $ reverse $ usedSaved mp'''
         reg = getReg mp''' var
         mp4 = emptyMapping mp'''
         mp5 = assocVariable mp4 var a0
     in
         (
-            mp5,
+            mp5{usedSaved = []},
             var,
-            label : instructions ++ [ISA.add a0 reg zero, ISA.Ret]
+            label : pushSaved ++ instructions ++ popSaved ++ [ISA.add a0 reg zero, ISA.Ret]
         )
 
 translateHelper mp (EFunCall name args) =

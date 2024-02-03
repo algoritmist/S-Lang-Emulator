@@ -90,10 +90,14 @@ outputInt:
     call outputPositiveInt
     ret
     _wsign:
+        swm s0 sp 0
+        subI sp sp 1
         add s0 a0 zero
         addI a0 zero 45
         call outputChar
         sub a0 zero s0
+        addI sp sp 1
+        lwm s0 sp 0
         jumpl outputPositiveInt
     _output0:
         addI a0 zero 48

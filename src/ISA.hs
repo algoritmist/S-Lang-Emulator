@@ -11,8 +11,19 @@ shft = 3
 maxOffset :: Int
 maxOffset = 4100
 
-data Register = Register{rType :: RegisterType, name :: Name} deriving(Ord, Eq)
-data RegisterType = Temporary | Argument | Saved | Virtual | Hardwired | Special deriving(Ord, Eq)
+data Register =
+    Register
+    {
+        rType :: RegisterType,
+        name  :: Name
+    } deriving(Ord, Eq)
+data RegisterType =
+    Temporary |
+    Argument |
+    Saved |
+    Virtual |
+    Hardwired |
+    Special deriving(Ord, Eq)
 
 
 instance Show Register where
