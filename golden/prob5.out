@@ -337,10 +337,14 @@ jll a0 zero _wsign
 call outputPositiveInt
 ret
 _wsign:
+swm s0 sp 0
+subI sp sp 1
 add s0 a0 zero
 addI a0 zero 45
 call outputChar
 sub a0 zero s0
+addI sp sp 1
+lwm s0 sp 0
 jumpl outputPositiveInt
 _output0:
 addI a0 zero 48
@@ -457,9 +461,9 @@ pc: 672   , instruction: add a0 a1 zero   , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 
 pc: 680   , instruction: swm ra sp 0      , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4072, tr: 0, rin : 0, rout: 0
 pc: 688   , instruction: subI sp sp 1     , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4072, tr: 0, rin : 0, rout: 0
 pc: 696   , instruction: savePC           , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4071, tr: 0, rin : 0, rout: 0
-pc: 704   , instruction: jump zero 3480   , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4071, tr: 0, rin : 0, rout: 0
-pc: 3480  , instruction: nop              , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4071, tr: 0, rin : 0, rout: 0
-pc: 3488  , instruction: ret              , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4071, tr: 0, rin : 0, rout: 0
+pc: 704   , instruction: jump zero 3512   , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4071, tr: 0, rin : 0, rout: 0
+pc: 3512  , instruction: nop              , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4071, tr: 0, rin : 0, rout: 0
+pc: 3520  , instruction: ret              , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4071, tr: 0, rin : 0, rout: 0
 pc: 712   , instruction: addI sp sp 1     , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4071, tr: 0, rin : 0, rout: 0
 pc: 720   , instruction: lwm ra sp 0      , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 696, sp: 4072, tr: 0, rin : 0, rout: 0
 pc: 728   , instruction: addI sp sp 1     , t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4072, tr: 0, rin : 0, rout: 0
