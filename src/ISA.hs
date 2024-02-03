@@ -6,8 +6,10 @@ type Name = String
 
 wordSize :: Int
 wordSize = 8
+
 shft :: Int
 shft = 3
+
 maxOffset :: Int
 maxOffset = 4100
 
@@ -16,14 +18,17 @@ data Register =
     {
         rType :: RegisterType,
         name  :: Name
-    } deriving(Ord, Eq)
+    }
+    deriving(Ord, Eq)
+
 data RegisterType =
     Temporary |
-    Argument |
-    Saved |
-    Virtual |
+    Argument  |
+    Saved     |
+    Virtual   |
     Hardwired |
-    Special deriving(Ord, Eq)
+    Special
+    deriving(Ord, Eq)
 
 
 instance Show Register where
@@ -65,15 +70,9 @@ rout :: Register
 rout = Register Special "rout"
 tr :: Register
 tr = Register Special "tr"
-v1 :: Register
-v1 = Register Virtual "v1"
-v2 :: Register
-v2 = Register Virtual "v2"
-ca0 :: Register
-ca0 = Register Special "ca0"
 
 registers :: [Register]
-registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr, v1, v2, ca0]
+registers = [zero, ra, pc, sp, dr, rin, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, rout, tr]
 
 gpRegs :: [Register]
 gpRegs = [zero, ra, sp, dr, a0, a1, a2, s0, s1, s2, t0, t1, t2, t3, tr]
@@ -100,12 +99,6 @@ type Rs1 = Register
 type Rs2 = Register
 type Imm = Int
 type LabelName = String
-
-{-
-I-type: imm - 12 bit signed, rs2 - 5 bit, rs1 - 5 bit, rd - 5 bit, opcode - 5 bit
-II-tpye: imm - 17 bit signed, rs1 - 5 bit, rd - 5 bit, opcode - 5 bit
-III-type: imm - 27 bit signed, opcode - 5 bit
--}
 
 data Instruction =
     MathOp Opcode Rd Rs1 Rs2 Imm |
