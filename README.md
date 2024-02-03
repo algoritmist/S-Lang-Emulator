@@ -79,7 +79,7 @@ Cтоит отметить, что язык не поддерживает patter
 | 5  | JMPL        | J                   | Jump           | pc <- @label                           |
 | 6  | PUSH        | -                   | -              | swm rs sp 0, subI sp sp 1              |
 | 7  | POP         | -                   | -              | addI sp sp 1, lwm rd sp 0              |
-| 7  | СALL        | -                   | -              | push ra, savePC, jump @label, pop ra   |
+| 8  | СALL        | -                   | -              | push ra, savePC, jump @label, pop ra   |
 
 ## Кодирование инструкций
 Машинный код используется в виде высокоуровневой структуры данных (см. [Instruction](src/ISA.hs#L103))
