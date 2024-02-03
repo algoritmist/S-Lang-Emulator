@@ -548,7 +548,7 @@ initDataPath instrs dm im =
 
 instance Show DataPath where
     show DataPath{pc, regFile, instrMem, ioDev} =
-        intercalate  ", "
+        intercalate  " | "
             [
                 padR 10 ("pc: " ++ show pc),
                 padR 30 ("instruction: "  ++ show (iStorage instrMem ! shift3 pc)),
