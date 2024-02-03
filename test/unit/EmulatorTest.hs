@@ -55,7 +55,7 @@ testSWO = TestCase $ assertEqual "t1 <- 42, data[0] = @t1, out[0] = @data[0]" [(
     in
         assocs $ outStorage dev
 
-testLWI = TestCase $ assertEqual "data[] = 42, t1 <- @data[16]" [(0, 72), (1, 101), (2, 108)] $
+testLWI = TestCase $ assertEqual "in = [72, 101, 108, ...], data = in[0:3]" [(0, 72), (1, 101), (2, 108)] $
     let
         instrs = [lwi zero 0, lwi zero 1, lwi zero 2]
         dmem = []
@@ -75,6 +75,26 @@ testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" 42 $
     in
         pC
 
+testBranchTrue = TestCase $ assertEqual "if a0 == a0 then pc <- pc + 24" 24 $
+    let
+        instrs = [je a0 a0 16]
+        dmem = []
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        pC = DataPath.pc $ last dps
+    in
+        pC
+
+testBranchFalse = TestCase $ assertEqual "if 2 == 42 then pc <- pc + 24" 24 $
+    let
+        instrs = [addI t0 t0 2, addI t1 t1 42, je t0 t1 8]
+        dmem = []
+        imem = [0]
+        (dps, result) = simulate instrs dmem imem
+        pC = DataPath.pc $ last dps
+    in
+        pC
+
 tests =
     TestList
     [
@@ -84,7 +104,9 @@ tests =
         TestLabel "Test LWM" testLWM,
         TestLabel "Test SWO" testSWO,
         TestLabel "Test LWI" testLWI,
-        TestLabel "Test Jump" testJump
+        TestLabel "Test Jump" testJump,
+        TestLabel "Test Branch true" testBranchTrue,
+        TestLabel "Test Branch false" testBranchFalse
     ]
 
 main:: IO Counts

@@ -249,13 +249,15 @@ All 4 tests passed (0.04s)
 ```
 ```bash
 $ cabal run Unit-tests
-Cases: 7  Tried: 1  Errors: 0  Failures: 0
-Cases: 7  Tried: 2  Errors: 0  Failures: 0
-Cases: 7  Tried: 3  Errors: 0  Failures: 0
-Cases: 7  Tried: 4  Errors: 0  Failures: 0
-Cases: 7  Tried: 5  Errors: 0  Failures: 0
-Cases: 7  Tried: 6  Errors: 0  Failures: 0
-Cases: 7  Tried: 7  Errors: 0  Failures: 0
+Cases: 9  Tried: 1  Errors: 0  Failures: 0
+Cases: 9  Tried: 2  Errors: 0  Failures: 0
+Cases: 9  Tried: 3  Errors: 0  Failures: 0
+Cases: 9  Tried: 4  Errors: 0  Failures: 0
+Cases: 9  Tried: 5  Errors: 0  Failures: 0
+Cases: 9  Tried: 6  Errors: 0  Failures: 0
+Cases: 9  Tried: 7  Errors: 0  Failures: 0
+Cases: 9  Tried: 8  Errors: 0  Failures: 0
+Cases: 9  Tried: 9  Errors: 0  Failures: 0
 ```
 
 ## Алгоритмы
