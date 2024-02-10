@@ -15,8 +15,8 @@ Expr ::= "(" Expr ")" | FunctionCall | LetExpr | IfThenElseExpr | BinOp Expr Exp
 FunctionCall ::= FunctionName CallArgs
 LetExpr ::= "Let" [VariableDefinition] "In" VariableDefinition
 IfThenElseExpr ::= "If" Expr "Then" [Expr] | "If" Expr "Then" [Expr] "Else" [Expr]
-BinOp ::= + | - | * | / | == | > | < | /= | ++
-UnOp ::= - | not | head | tail
+BinOp ::= + | - | * | / | == | > | < | /=
+UnOp ::= - | head | tail
 CallArgs ::= (Expr)
 FunctionName ::= Name
 VariableName ::= Name
@@ -84,7 +84,13 @@ Cтоит отметить, что язык не поддерживает patter
 ## Кодирование инструкций
 Машинный код используется в виде высокоуровневой структуры данных (см. [Instruction](src/ISA.hs#L103))
 ## Транслятор
-TBD* Можно написать транслятор для ассемблера
+![Исходный код](src/Translator.hs)
+Преобразование происходит в четыре стадии:
+```AST -> CFG -> Pseudo Asm -> Real Asm```
+
+На второй стадии также происходит распределение регистров.
+
+На четвертой стадии высчитываются реальные адреса меток и данных (см. ![Converter](src/Converter.hs))
 ## Модель процессора
 ### DataPath
 ![DataPath](images/datapath.png)
