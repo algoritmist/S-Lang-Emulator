@@ -77,7 +77,7 @@ testJump = TestCase $ assertEqual "t1 <- 4, jump t1 38, pc <- @t1 + 38" 42 $
 
 testBranchTrue = TestCase $ assertEqual "if a0 == a0 then pc <- pc + 24" 24 $
     let
-        instrs = [je a0 a0 16]
+        instrs = [be a0 a0 16]
         dmem = []
         imem = [0]
         (dps, result) = simulate instrs dmem imem
@@ -87,7 +87,7 @@ testBranchTrue = TestCase $ assertEqual "if a0 == a0 then pc <- pc + 24" 24 $
 
 testBranchFalse = TestCase $ assertEqual "if 2 == 42 then pc <- pc + 24" 24 $
     let
-        instrs = [addI t0 t0 2, addI t1 t1 42, je t0 t1 8]
+        instrs = [addI t0 t0 2, addI t1 t1 42, be t0 t1 8]
         dmem = []
         imem = [0]
         (dps, result) = simulate instrs dmem imem

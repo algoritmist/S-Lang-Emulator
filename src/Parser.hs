@@ -19,11 +19,11 @@ identifier = Token.identifier lexer -- parses an identifier
 
 mathOp = string "add" <|> string "sub" <|> try (string "mul") <|> try (string "mod") <|> string "div"
 mathIOp = string "addI" <|> string "subI" <|> try (string "mulI") <|> try (string "modI") <|> string "divI"
-branchOp = try (string "je") <|> try (string "jne") <|> try (string "jl") <|> try (string "jg")
+branchOp = try (string "be") <|> try (string "bne") <|> try (string "bl") <|> try (string "bg")
 registerMemoryOp = string "lwm" <|> string "swm"
 memoryMemoryOp = string "lwi" <|> string "swo"
 jumpOp = string "jump"
-pseudoBranchOp = try (string "jel") <|> try (string "jnel") <|> try (string "jll") <|> try (string "jgl")
+pseudoBranchOp = try (string "bel") <|> try (string "bnel") <|> try (string "bll") <|> try (string "bgl")
 pseudoJumpOp = string "jumpl"
 
 int = fromInteger <$> Token.integer lexer
@@ -149,11 +149,11 @@ branch = do
     let rs2' = ISA.toReg rs2
     return $ op' name rs1' rs2' imm
     where
-        op' "je" = ISA.je
-        op' "jne" = ISA.jne
-        op' "jg" = ISA.jg
-        op' "jl" = ISA.jl
-        op' s = error $ "error: expected je or jne or jg or jl, but got " ++ s
+        op' "be" = ISA.be
+        op' "bne" = ISA.bne
+        op' "bg" = ISA.bg
+        op' "bl" = ISA.bl
+        op' s = error $ "error: expected be or bne or bg or bl, but got " ++ s
 
 registerMemory :: Parser ISA.Instruction
 registerMemory = do
@@ -220,11 +220,11 @@ pseudoBranch = do
     let rs2' = ISA.toReg rs2
     return $ op' name rs1' rs2' label
     where
-        op' "jel" = ISA.jel
-        op' "jnel" = ISA.jnel
-        op' "jgl" = ISA.jgl
-        op' "jll" = ISA.jll
-        op' s = error $ "error: expected jel or jnel or jgl or jll, but got " ++ s
+        op' "bel" = ISA.bel
+        op' "bnel" = ISA.bnel
+        op' "bgl" = ISA.bgl
+        op' "bll" = ISA.bll
+        op' s = error $ "error: expected bel or bnel or bgl or bll, but got " ++ s
 
 pseudoJump :: Parser ISA.Instruction
 pseudoJump = do

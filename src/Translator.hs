@@ -200,10 +200,10 @@ translateHelper mp (EIf op'@(EBinOp op e1 e2) (eTrue, eFalse)) =
         r1 = getReg mp5 v1
         r2 = getReg mp5 v2
         instr = case op of
-            Eq   -> ISA.jel r1 r2 trueLabel
-            G    -> ISA.jgl r1 r2 trueLabel
-            L    -> ISA.jll r1 r2 trueLabel
-            NotE -> ISA.jnel r1 r2 trueLabel
+            Eq   -> ISA.bel r1 r2 trueLabel
+            G    -> ISA.bgl r1 r2 trueLabel
+            L    -> ISA.bll r1 r2 trueLabel
+            NotE -> ISA.bnel r1 r2 trueLabel
             _ -> error $ "Translator: expected boolean expression but got: " ++ show op'
 
         rd = getReg mp5 finalVar
