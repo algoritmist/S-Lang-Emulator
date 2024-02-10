@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE TupleSections  #-}
-module DataPath where
+module SchemeElements where
 import           Data.Bits  (shiftR)
 import           Data.List  (intercalate)
 import           Data.Map   (Map, assocs, empty, fromList, insert, (!))
@@ -8,7 +8,6 @@ import qualified Data.Map   as Map (lookup)
 import           Data.Maybe (fromMaybe)
 import           ISA        hiding (a1, a2, pc)
 import           Utils
-
 
 data InstructionMemory =
     InstructionMemory
@@ -558,89 +557,3 @@ instance Show DataPath where
 
 shift3 :: Int -> Int
 shift3 x = x `shiftR` shft
-
-instructionFetch :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
-instructionFetch (cu, dp@DataPath{pc, instrMem, pcAlu}) =
-    let
-        pcAlu' = pcAlu {srcA = pc}
-        instrMem' = instrMem{addr = shift3 pc}
-    in
-        Right (cu, dp{instrMem = instrMem',pcAlu = pcAlu'})
-
-instructionDecode :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
-instructionDecode (cu, dp@DataPath{regFile, instrMem, brAlu, pcAlu, decoder}) = do
-    instr <- rd0 instrMem
-    let (cu', decoder') = decode instr decoder
-    let brAlu' = brAlu {srcA = immB decoder', srcB = aluOut pcAlu}
-    let regFile' = regFile{a1 = rs1 decoder', a2 = rs2 decoder', a3 = rd decoder', we1 = sigWE1 cu', aluOp = rOp decoder'}
-    if sigHalt cu' then
-        Left "Halt: Stopping execution"
-    else
-        Right (cu', dp{regFile = regFile', brAlu = brAlu', decoder = decoder'})
-
-execute :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
-execute (cu, dp@DataPath{pc, regFile, decoder, ioDev, brAlu, jmpAlu, pcAlu}) = do
-    rd2Value <- rd2 regFile
-    let sndMux' = Multiplexor{sel = sigSndSrc cu, sig0 = rd2Value, sig1 = immI decoder}
-    rd1Value <- rd1 regFile
-    let fstMux' = Multiplexor{sel = sigFstSrc cu, sig0 = pc, sig1 = rd1Value}
-    let mainAlu' = ALU{srcA = outSig fstMux', srcB = outSig sndMux', op = aluOp regFile}
-    let cu' = setBranchSignal decoder mainAlu' cu
-    rd3Value <- rd3 regFile
-    let jmpAlu' = jmpAlu{srcA = immJ decoder, srcB = rd3Value, op = (+)}
-    let jbMux' =  Multiplexor{sel = sigJB cu', sig0 = aluOut jmpAlu', sig1 = aluOut brAlu}
-    let pcMux' = Multiplexor{sel = sigPC cu', sig0 = outSig jbMux', sig1 = aluOut pcAlu}
-    let pc' = outSig pcMux'
-    rd5Value <- rd5 ioDev
-    let rdMux' = Multiplexor{sel = sigRdSrc cu', sig0 = rd3Value, sig1 = rd5Value}
-    Right (cu',
-        dp
-        {
-            pc = pc',
-            fstMux = fstMux',
-            sndMux = sndMux',
-            mainAlu = mainAlu',
-            jmpAlu = jmpAlu',
-            jbMux = jbMux',
-            pcMux = pcMux',
-            rdMux = rdMux'
-        }
-        )
-
-accessMemory :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
-accessMemory (cu, dp@DataPath{dMem, mainAlu, rdMux, ioDev}) = do
-    let dMem' = writeData dMem{offset = aluOut mainAlu, wData = outSig rdMux, we2 = sigWE2 cu}
-    let rd4Value = rd4 dMem'
-    let ioDev' = readIn.writeOut $ ioDev{mData = rd4Value, re = sigRE cu, we3 = sigWE3 cu}
-    Right (cu, dp{dMem = dMem', ioDev = ioDev'})
-
-writeBack :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
-writeBack (cu, dp@DataPath{dMem, regFile, mainAlu}) = do
-    let rd4Value = rd4 dMem
-    let amMux' = Multiplexor{sel = sigAmSrc cu, sig0 = aluOut mainAlu, sig1 = rd4Value}
-    let regFile' = writeRegister regFile{wr = outSig amMux'}
-    Right (cu, dp{amMux = amMux', regFile = regFile'})
-
-tick :: (ControlUnit, DataPath) -> Either String (ControlUnit, DataPath)
-tick (cu, dp) = writeBack =<< accessMemory =<< execute =<< instructionDecode =<< instructionFetch (cu, dp)
-
-
-
-ticks :: (ControlUnit, DataPath) -> ([DataPath], String)
-ticks cd = case tick cd of
-    Left err -> ([], err)
-    Right (cu, dp) ->
-        let
-            (dp', msg) = ticks (cu, dp)
-        in
-            (dp : dp', msg)
-
-simulate :: [Instruction] -> [Int] -> [Int] -> ([DataPath], String)
-simulate instrs dm im =
-    let
-        cu = initControlUnit
-        dp = initDataPath instrs dm im
-        (dps, result) = ticks (cu, dp)
-    in
-        (dp : dps, result)
-
