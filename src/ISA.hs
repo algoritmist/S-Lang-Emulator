@@ -133,10 +133,10 @@ instance Show Instruction where
     show(Branch op rs1 rs2 imm) =
         let
             prefix = case op of
-                4 -> "je"
-                5 -> "jne"
-                6 -> "jg"
-                7 -> "jl"
+                4 -> "be"
+                5 -> "bne"
+                6 -> "bg"
+                7 -> "bl"
                 _ -> error $ "Error: unknown Branch with op = " ++ show op
         in
             prefix ++ " "  ++ show rs1 ++ " " ++ show rs2 ++ " " ++ show imm
@@ -175,10 +175,10 @@ instance Show Instruction where
     show (PseudoBranch op rs1 rs2 label) =
         let
             prefix = case op of
-                4 -> "jel"
-                5 -> "jnel"
-                6 -> "jgl"
-                7 -> "jll"
+                4 -> "bel"
+                5 -> "bnel"
+                6 -> "bgl"
+                7 -> "bll"
         in
             prefix ++ " "  ++ show rs1 ++ " " ++ show rs2 ++ " " ++ label
     show (PseudoJump _ label) = "jumpl " ++ label
@@ -199,14 +199,14 @@ div rd rs1 rs2 = MathOp 3 rd rs1 rs2 0
 mod :: Rd -> Rs1 -> Rs2 -> Instruction
 mod rd rs1 rs2 = MathOp 8 rd rs1 rs2 0
 -- Branch instructions
-je :: Rs1 -> Rs2 -> Imm -> Instruction
-je = Branch 4 -- if(@rs1 == @rs2) pc <- pc + imm
-jne :: Rs1 -> Rs2 -> Imm -> Instruction
-jne = Branch 5
-jg :: Rs1 -> Rs2 -> Imm -> Instruction
-jg = Branch 6
-jl :: Rs1 -> Rs2 -> Imm -> Instruction
-jl = Branch 7
+be :: Rs1 -> Rs2 -> Imm -> Instruction
+be = Branch 4 -- if(@rs1 == @rs2) pc <- pc + imm
+bne :: Rs1 -> Rs2 -> Imm -> Instruction
+bne = Branch 5
+bg :: Rs1 -> Rs2 -> Imm -> Instruction
+bg = Branch 6
+bl :: Rs1 -> Rs2 -> Imm -> Instruction
+bl = Branch 7
 jmp :: Rd -> Imm -> Instruction
 jmp = Jump 31
 
@@ -245,13 +245,13 @@ call :: Register -> Offset -> [Instruction]
 call rd imm =  push ra ++ [SavePC, jmp rd imm] ++ pop ra
 
 -- Pseudo branch instructions
-jel :: Rs1 -> Rs2 -> LabelName -> Instruction
-jel = PseudoBranch 4
-jnel :: Rs1 -> Rs2 -> LabelName -> Instruction
-jnel = PseudoBranch 5
-jgl :: Rs1 -> Rs2 -> LabelName -> Instruction
-jgl = PseudoBranch 6
-jll :: Rs1 -> Rs2 -> LabelName -> Instruction
-jll = PseudoBranch 7
+bel :: Rs1 -> Rs2 -> LabelName -> Instruction
+bel = PseudoBranch 4
+bnel :: Rs1 -> Rs2 -> LabelName -> Instruction
+bnel = PseudoBranch 5
+bgl :: Rs1 -> Rs2 -> LabelName -> Instruction
+bgl = PseudoBranch 6
+bll :: Rs1 -> Rs2 -> LabelName -> Instruction
+bll = PseudoBranch 7
 jmpl :: LabelName -> Instruction
 jmpl = PseudoJump 31

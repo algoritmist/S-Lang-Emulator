@@ -8,7 +8,7 @@ call main
 halt
 gcd:
 addI t0 zero 0
-jel a0 t0 _l0
+bel a0 t0 _l0
 mod t2 a1 a0
 add t3 a0 zero
 swm t0 sp 0
@@ -109,7 +109,7 @@ div t2 t0 a0
 add a0 t2 zero
 ret
 findDiv:
-jel a1 a2 _l2
+bel a1 a2 _l2
 add t1 a0 zero
 swm t0 sp 0
 subI sp sp 1
@@ -260,7 +260,7 @@ input:
 swm a0 dr 0
 add a1 dr zero
 _loop:
-jel a0 zero _end
+bel a0 zero _end
 addI dr dr 1
 lwi dr 0
 subI a0 a0 1
@@ -272,7 +272,7 @@ ret
 output:
 lwm t0 a0 0
 _loop:
-jel t0 zero _end
+bel t0 zero _end
 addI a0 a0 1
 swo a0 0
 subI t0 t0 1
@@ -287,7 +287,7 @@ lwm t1 a1 0
 add t2 t0 t1
 swm t2 dr 0
 _loop1:
-jel t0 zero _loop2
+bel t0 zero _loop2
 addI dr dr 1
 addI a0 a0 1
 lwm tr a0 0
@@ -295,7 +295,7 @@ swm tr dr 0
 subI t0 t0 1
 jumpl _loop1
 _loop2:
-jel t1 zero _end
+bel t1 zero _end
 addI dr dr 1
 addI a1 a1 1
 lwm tr a1 0
@@ -316,7 +316,7 @@ addI a0 a0 1
 subI t0 t0 1
 swm t0 dr 0
 _loop:
-jel t0 zero _end
+bel t0 zero _end
 addI a0 a0 1
 addI dr dr 1
 lwm tr a0 0
@@ -332,8 +332,8 @@ swm a0 dr 0
 swo dr 0
 ret
 outputInt:
-jel a0 zero _output0
-jll a0 zero _wsign
+bel a0 zero _output0
+bll a0 zero _wsign
 call outputPositiveInt
 ret
 _wsign:
@@ -351,7 +351,7 @@ addI a0 zero 48
 call outputChar
 ret
 outputPositiveInt:
-jel a0 zero _end
+bel a0 zero _end
 swm a0 sp 0
 subI sp sp 1
 divI a0 a0 10
@@ -394,7 +394,7 @@ pc: 2160   | instruction: subI sp sp 1      | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0
 pc: 2168   | instruction: savePC            | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4091, tr: 0 | rin : 0, rout: 0
 pc: 2176   | instruction: jump zero 1032    | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 2168, sp: 4091, tr: 0 | rin : 0, rout: 0
 pc: 1032   | instruction: nop               | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 2168, sp: 4091, tr: 0 | rin : 0, rout: 0
-pc: 1040   | instruction: je a1 a2 760      | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 2168, sp: 4091, tr: 0 | rin : 0, rout: 0
+pc: 1040   | instruction: be a1 a2 760      | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 2168, sp: 4091, tr: 0 | rin : 0, rout: 0
 pc: 1048   | instruction: add t1 a0 zero    | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 2168, sp: 4091, tr: 0 | rin : 0, rout: 0
 pc: 1056   | instruction: swm t0 sp 0       | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 2168, sp: 4091, tr: 0 | rin : 0, rout: 0
 pc: 1064   | instruction: subI sp sp 1      | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 2168, sp: 4091, tr: 0 | rin : 0, rout: 0
@@ -427,7 +427,7 @@ pc: 928    | instruction: savePC            | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0
 pc: 936    | instruction: jump zero 56      | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
 pc: 56     | instruction: nop               | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
 pc: 64     | instruction: addI t0 zero 0    | t0: 1 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
-pc: 72     | instruction: je a0 t0 512      | t0: 0 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
+pc: 72     | instruction: be a0 t0 512      | t0: 0 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
 pc: 80     | instruction: mod t2 a1 a0      | t0: 0 , t1: 1 , t2: 21, t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
 pc: 88     | instruction: add t3 a0 zero    | t0: 0 , t1: 1 , t2: 0 , t3: 0 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
 pc: 96     | instruction: swm t0 sp 0       | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 1 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 928, sp: 4082, tr: 0 | rin : 0, rout: 0
@@ -448,7 +448,7 @@ pc: 208    | instruction: savePC            | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0
 pc: 216    | instruction: jump zero 56      | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
 pc: 56     | instruction: nop               | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
 pc: 64     | instruction: addI t0 zero 0    | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
-pc: 72     | instruction: je a0 t0 512      | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
+pc: 72     | instruction: be a0 t0 512      | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
 pc: 592    | instruction: nop               | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
 pc: 600    | instruction: add t2 a0 zero    | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
 pc: 608    | instruction: swm t0 sp 0       | t0: 0 , t1: 1 , t2: 0 , t3: 1 , a0: 0 , a1: 1 , a2: 21, s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0

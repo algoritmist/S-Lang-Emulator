@@ -3,7 +3,7 @@ input:
     swm a0 dr 0 # set size of list to @a0
     add a1 dr zero # a1 is the address of char-list in memory
     _loop:
-        jel a0 zero _end
+        bel a0 zero _end
         addI dr dr 1
         lwi dr 0
         subI a0 a0 1
@@ -17,7 +17,7 @@ input:
 output:
     lwm t0 a0 0 # size of list
     _loop:
-        jel t0 zero _end
+        bel t0 zero _end
         addI a0 a0 1
         swo a0 0
         subI t0 t0 1
@@ -34,7 +34,7 @@ addLists:
     add t2 t0 t1 # size of |l1|+|l2|
     swm t2 dr 0 # write size of list at the beggining
     _loop1:
-        jel t0 zero _loop2
+        bel t0 zero _loop2
         addI dr dr 1
         addI a0 a0 1
         lwm tr a0 0
@@ -42,7 +42,7 @@ addLists:
         subI t0 t0 1
         jumpl _loop1
     _loop2:
-        jel t1 zero _end
+        bel t1 zero _end
         addI dr dr 1
         addI a1 a1 1
         lwm tr a1 0
@@ -67,7 +67,7 @@ tail:
     subI t0 t0 1
     swm t0 dr 0
     _loop:
-        jel t0 zero _end
+        bel t0 zero _end
         addI a0 a0 1
         addI dr dr 1
         lwm tr a0 0
@@ -85,8 +85,8 @@ outputChar:
     ret
 
 outputInt:
-    jel a0 zero _output0
-    jll a0 zero _wsign
+    bel a0 zero _output0
+    bll a0 zero _wsign
     call outputPositiveInt
     ret
     _wsign:
@@ -105,7 +105,7 @@ outputInt:
         ret
 # takes a0 as int and prints it
 outputPositiveInt:
-    jel a0 zero _end
+    bel a0 zero _end
     swm a0 sp 0
     subI sp sp 1
     divI a0 a0 10

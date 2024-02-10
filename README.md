@@ -62,20 +62,20 @@ Cтоит отметить, что язык не поддерживает patter
 | 12 | 21     | SWM        | I                   | R-M            | data[@rs1+imm] <- @rd          |
 | 13 | 22     | LWI        | I                   | M-M            | data[@rs1+imm] <- in[@inPtr]   |
 | 14 | 23     | SWO        | I                   | M-M            | out[@outPtr] <- data[@rs1+imm] |
-| 15 | 4      | JE         | B                   | Branch         | if(@rs1==@rs2) pc <- pc + imm  |
-| 16 | 5      | JG         | B                   | Branch         | if(@rs1>@rs2) pc <- pc + imm   |
-| 17 | 6      | JNE        | B                   | Branch         | if(@rs1<>@rs2) pc <- pc + imm  |
-| 18 | 7      | JL         | B                   | Branch         | if(@rs1<@rs2) pc <- pc + imm   |
+| 15 | 4      | BE         | B                   | Branch         | if(@rs1==@rs2) pc <- pc + imm  |
+| 16 | 5      | BG         | B                   | Branch         | if(@rs1>@rs2) pc <- pc + imm   |
+| 17 | 6      | BNE        | B                   | Branch         | if(@rs1<>@rs2) pc <- pc + imm  |
+| 18 | 7      | BL         | B                   | Branch         | if(@rs1<@rs2) pc <- pc + imm   |
 | 19 | 31     | JMP        | J                   | Jump           | pc <- @rd + imm                |
 | 20 | 25     | SavePC     | R                   | R-R            | ra <- pc                       |
 
 ### Псевдоинстркуции
 | №  | Инструкция  | Тип машинного слова | Тип инструкции | Описание                               |
 |----|-------------|---------------------|----------------|--------------------------------        |
-| 1  | JEL         | B                   | Branch         | if(@rs1==@rs2) pc <- @label            |
-| 2  | JGL         | B                   | Branch         | if(@rs1>@rs2) pc <- @label             |
-| 3  | JNEL        | B                   | Branch         | if(@rs1<>@rs2) pc <- @label            |
-| 4  | JLL         | B                   | Branch         | if(@rs1<@rs2) pc <- @label             |
+| 1  | BEL         | B                   | Branch         | if(@rs1==@rs2) pc <- @label            |
+| 2  | BGL         | B                   | Branch         | if(@rs1>@rs2) pc <- @label             |
+| 3  | BNEL        | B                   | Branch         | if(@rs1<>@rs2) pc <- @label            |
+| 4  | BLL         | B                   | Branch         | if(@rs1<@rs2) pc <- @label             |
 | 5  | JMPL        | J                   | Jump           | pc <- @label                           |
 | 6  | PUSH        | -                   | -              | swm rs sp 0, subI sp sp 1              |
 | 7  | POP         | -                   | -              | addI sp sp 1, lwm rd sp 0              |
@@ -83,6 +83,11 @@ Cтоит отметить, что язык не поддерживает patter
 
 ## Кодирование инструкций
 Машинный код используется в виде высокоуровневой структуры данных (см. [Instruction](src/ISA.hs#L103))
+## Модель процессора
+### DataPath
+![DataPath](images/datapath.png)
+### Control Unit
+![ControlUnit](images/control_unit.png)
 ## Транслятор
 ![Исходный код](src/Translator.hs)
 Преобразование происходит в четыре стадии:
@@ -91,11 +96,6 @@ Cтоит отметить, что язык не поддерживает patter
 На второй стадии также происходит распределение регистров.
 
 На четвертой стадии высчитываются реальные адреса меток и данных (см. ![Converter](src/Converter.hs))
-## Модель процессора
-### DataPath
-![DataPath](images/datapath.png)
-### Control Unit
-![ControlUnit](images/control_unit.png)
 ## Тестирование
 В качестве тестов было использовано:
 1. hello
