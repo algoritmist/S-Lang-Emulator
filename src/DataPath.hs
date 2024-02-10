@@ -547,11 +547,12 @@ initDataPath instrs dm im =
     }
 
 instance Show DataPath where
-    show DataPath{pc, regFile, instrMem, ioDev} =
+    show DataPath{pc, regFile, instrMem, ioDev, mainAlu} =
         intercalate  " | "
             [
                 padR 10 ("pc: " ++ show pc),
                 padR 30 ("instruction: "  ++ show (iStorage instrMem ! shift3 pc)),
+                "N: " ++ show (if aluNegative mainAlu then 1 else 0) ++ ", Z: " ++ show(if aluZero mainAlu then 1 else 0),
                 showYaml (assocs $ rStorage regFile),
                 show ioDev
             ]

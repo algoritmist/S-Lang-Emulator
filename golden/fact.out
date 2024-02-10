@@ -224,106 +224,106 @@ Data Memory: |-
 Stdin: |-
 X
 Ticks: |-
-pc: 0      | instruction: swm ra sp 0       | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4096, tr: 0 | rin : 0, rout: 0
-pc: 8      | instruction: subI sp sp 1      | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4096, tr: 0 | rin : 0, rout: 0
-pc: 16     | instruction: savePC            | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4095, tr: 0 | rin : 0, rout: 0
-pc: 24     | instruction: jump zero 840     | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
-pc: 840    | instruction: nop               | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
-pc: 848    | instruction: addI t0 zero 3    | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
-pc: 856    | instruction: add t1 a0 zero    | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
-pc: 864    | instruction: swm t0 sp 0       | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
-pc: 872    | instruction: subI sp sp 1      | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
-pc: 880    | instruction: add a0 t0 zero    | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0 | rin : 0, rout: 0
-pc: 888    | instruction: swm ra sp 0       | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0 | rin : 0, rout: 0
-pc: 896    | instruction: subI sp sp 1      | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0 | rin : 0, rout: 0
-pc: 904    | instruction: savePC            | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 912    | instruction: jump zero 56      | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 56     | instruction: nop               | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 64     | instruction: addI t0 zero 2    | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 72     | instruction: bl a0 t0 520      | t0: 2 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 80     | instruction: addI t2 zero 1    | t0: 2 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 88     | instruction: sub t3 a0 t2      | t0: 2 , t1: 0 , t2: 1 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 96     | instruction: add a1 a0 zero    | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 104    | instruction: swm t0 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 112    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
-pc: 120    | instruction: swm t1 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4092, tr: 0 | rin : 0, rout: 0
-pc: 128    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4092, tr: 0 | rin : 0, rout: 0
-pc: 136    | instruction: swm t2 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4091, tr: 0 | rin : 0, rout: 0
-pc: 144    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4091, tr: 0 | rin : 0, rout: 0
-pc: 152    | instruction: swm t3 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4090, tr: 0 | rin : 0, rout: 0
-pc: 160    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4090, tr: 0 | rin : 0, rout: 0
-pc: 168    | instruction: swm a1 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4089, tr: 0 | rin : 0, rout: 0
-pc: 176    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4089, tr: 0 | rin : 0, rout: 0
-pc: 184    | instruction: add a0 t3 zero    | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4088, tr: 0 | rin : 0, rout: 0
-pc: 192    | instruction: swm ra sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4088, tr: 0 | rin : 0, rout: 0
-pc: 200    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4088, tr: 0 | rin : 0, rout: 0
-pc: 208    | instruction: savePC            | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 216    | instruction: jump zero 56      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 56     | instruction: nop               | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 64     | instruction: addI t0 zero 2    | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 72     | instruction: bl a0 t0 520      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 80     | instruction: addI t2 zero 1    | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 88     | instruction: sub t3 a0 t2      | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 96     | instruction: add a1 a0 zero    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 104    | instruction: swm t0 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 112    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
-pc: 120    | instruction: swm t1 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4086, tr: 0 | rin : 0, rout: 0
-pc: 128    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4086, tr: 0 | rin : 0, rout: 0
-pc: 136    | instruction: swm t2 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
-pc: 144    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
-pc: 152    | instruction: swm t3 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
-pc: 160    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
-pc: 168    | instruction: swm a1 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
-pc: 176    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
-pc: 184    | instruction: add a0 t3 zero    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
-pc: 192    | instruction: swm ra sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
-pc: 200    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
-pc: 208    | instruction: savePC            | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 216    | instruction: jump zero 56      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 56     | instruction: nop               | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 64     | instruction: addI t0 zero 2    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 72     | instruction: bl a0 t0 520      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 600    | instruction: nop               | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 608    | instruction: addI t2 zero 1    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 616    | instruction: add t3 a0 zero    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 624    | instruction: swm t0 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 632    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 640    | instruction: swm t1 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
-pc: 648    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
-pc: 656    | instruction: swm t2 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
-pc: 664    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
-pc: 672    | instruction: swm t3 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
-pc: 680    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
-pc: 688    | instruction: add a0 t2 zero    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
-pc: 696    | instruction: swm ra sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
-pc: 704    | instruction: subI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
-pc: 712    | instruction: savePC            | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
-pc: 720    | instruction: jump zero 2152    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
-pc: 2152   | instruction: nop               | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
-pc: 2160   | instruction: ret               | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
-pc: 728    | instruction: addI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
-pc: 736    | instruction: lwm ra sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4077, tr: 0 | rin : 0, rout: 0
-pc: 744    | instruction: addI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
-pc: 752    | instruction: lwm t3 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
-pc: 760    | instruction: addI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
-pc: 768    | instruction: lwm t2 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
-pc: 776    | instruction: addI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
-pc: 784    | instruction: lwm t1 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
-pc: 792    | instruction: addI sp sp 1      | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
-pc: 800    | instruction: lwm t0 sp 0       | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 808    | instruction: add t1 a0 zero    | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 816    | instruction: nop               | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 824    | instruction: add a0 t1 zero    | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 832    | instruction: ret               | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 224    | instruction: addI sp sp 1      | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
-pc: 232    | instruction: lwm ra sp 0       | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
-pc: 240    | instruction: addI sp sp 1      | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
-pc: 248    | instruction: lwm a1 sp 0       | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
-pc: 256    | instruction: addI sp sp 1      | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
-pc: 264    | instruction: lwm t3 sp 0       | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
-pc: 272    | instruction: addI sp sp 1      | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
-pc: 280    | instruction: lwm t2 sp 0       | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
-pc: 288    | instruction: addI sp sp 1      | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
+pc: 0      | instruction: swm ra sp 0       | N: 0, Z: 1 | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4096, tr: 0 | rin : 0, rout: 0
+pc: 8      | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4096, tr: 0 | rin : 0, rout: 0
+pc: 16     | instruction: savePC            | N: 0, Z: 0 | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 0 , sp: 4095, tr: 0 | rin : 0, rout: 0
+pc: 24     | instruction: jump zero 840     | N: 0, Z: 0 | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
+pc: 840    | instruction: nop               | N: 0, Z: 1 | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
+pc: 848    | instruction: addI t0 zero 3    | N: 0, Z: 1 | t0: 0 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
+pc: 856    | instruction: add t1 a0 zero    | N: 0, Z: 0 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
+pc: 864    | instruction: swm t0 sp 0       | N: 0, Z: 1 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
+pc: 872    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4095, tr: 0 | rin : 0, rout: 0
+pc: 880    | instruction: add a0 t0 zero    | N: 0, Z: 0 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 0 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0 | rin : 0, rout: 0
+pc: 888    | instruction: swm ra sp 0       | N: 0, Z: 0 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0 | rin : 0, rout: 0
+pc: 896    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4094, tr: 0 | rin : 0, rout: 0
+pc: 904    | instruction: savePC            | N: 0, Z: 0 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 16, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 912    | instruction: jump zero 56      | N: 0, Z: 0 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 56     | instruction: nop               | N: 0, Z: 1 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 64     | instruction: addI t0 zero 2    | N: 0, Z: 1 | t0: 3 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 72     | instruction: bl a0 t0 520      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 80     | instruction: addI t2 zero 1    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 0 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 88     | instruction: sub t3 a0 t2      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 0 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 96     | instruction: add a1 a0 zero    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 0 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 104    | instruction: swm t0 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 112    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4093, tr: 0 | rin : 0, rout: 0
+pc: 120    | instruction: swm t1 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4092, tr: 0 | rin : 0, rout: 0
+pc: 128    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4092, tr: 0 | rin : 0, rout: 0
+pc: 136    | instruction: swm t2 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4091, tr: 0 | rin : 0, rout: 0
+pc: 144    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4091, tr: 0 | rin : 0, rout: 0
+pc: 152    | instruction: swm t3 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4090, tr: 0 | rin : 0, rout: 0
+pc: 160    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4090, tr: 0 | rin : 0, rout: 0
+pc: 168    | instruction: swm a1 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4089, tr: 0 | rin : 0, rout: 0
+pc: 176    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4089, tr: 0 | rin : 0, rout: 0
+pc: 184    | instruction: add a0 t3 zero    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 3 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4088, tr: 0 | rin : 0, rout: 0
+pc: 192    | instruction: swm ra sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4088, tr: 0 | rin : 0, rout: 0
+pc: 200    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4088, tr: 0 | rin : 0, rout: 0
+pc: 208    | instruction: savePC            | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 904, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 216    | instruction: jump zero 56      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 56     | instruction: nop               | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 64     | instruction: addI t0 zero 2    | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 72     | instruction: bl a0 t0 520      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 80     | instruction: addI t2 zero 1    | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 88     | instruction: sub t3 a0 t2      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 2 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 96     | instruction: add a1 a0 zero    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 3 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 104    | instruction: swm t0 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 112    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4087, tr: 0 | rin : 0, rout: 0
+pc: 120    | instruction: swm t1 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4086, tr: 0 | rin : 0, rout: 0
+pc: 128    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4086, tr: 0 | rin : 0, rout: 0
+pc: 136    | instruction: swm t2 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
+pc: 144    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
+pc: 152    | instruction: swm t3 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
+pc: 160    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
+pc: 168    | instruction: swm a1 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
+pc: 176    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
+pc: 184    | instruction: add a0 t3 zero    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 2 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
+pc: 192    | instruction: swm ra sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
+pc: 200    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
+pc: 208    | instruction: savePC            | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 216    | instruction: jump zero 56      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 56     | instruction: nop               | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 64     | instruction: addI t0 zero 2    | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 72     | instruction: bl a0 t0 520      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 600    | instruction: nop               | N: 1, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 608    | instruction: addI t2 zero 1    | N: 1, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 616    | instruction: add t3 a0 zero    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 624    | instruction: swm t0 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 632    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 640    | instruction: swm t1 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
+pc: 648    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
+pc: 656    | instruction: swm t2 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
+pc: 664    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
+pc: 672    | instruction: swm t3 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
+pc: 680    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
+pc: 688    | instruction: add a0 t2 zero    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
+pc: 696    | instruction: swm ra sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
+pc: 704    | instruction: subI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
+pc: 712    | instruction: savePC            | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4076, tr: 0 | rin : 0, rout: 0
+pc: 720    | instruction: jump zero 2152    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
+pc: 2152   | instruction: nop               | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
+pc: 2160   | instruction: ret               | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
+pc: 728    | instruction: addI sp sp 1      | N: 0, Z: 1 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4076, tr: 0 | rin : 0, rout: 0
+pc: 736    | instruction: lwm ra sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 712, sp: 4077, tr: 0 | rin : 0, rout: 0
+pc: 744    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4077, tr: 0 | rin : 0, rout: 0
+pc: 752    | instruction: lwm t3 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
+pc: 760    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4078, tr: 0 | rin : 0, rout: 0
+pc: 768    | instruction: lwm t2 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
+pc: 776    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4079, tr: 0 | rin : 0, rout: 0
+pc: 784    | instruction: lwm t1 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
+pc: 792    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4080, tr: 0 | rin : 0, rout: 0
+pc: 800    | instruction: lwm t0 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 808    | instruction: add t1 a0 zero    | N: 0, Z: 0 | t0: 2 , t1: 0 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 816    | instruction: nop               | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 824    | instruction: add a0 t1 zero    | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 832    | instruction: ret               | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 224    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4081, tr: 0 | rin : 0, rout: 0
+pc: 232    | instruction: lwm ra sp 0       | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
+pc: 240    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4082, tr: 0 | rin : 0, rout: 0
+pc: 248    | instruction: lwm a1 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
+pc: 256    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4083, tr: 0 | rin : 0, rout: 0
+pc: 264    | instruction: lwm t3 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
+pc: 272    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4084, tr: 0 | rin : 0, rout: 0
+pc: 280    | instruction: lwm t2 sp 0       | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
+pc: 288    | instruction: addI sp sp 1      | N: 0, Z: 0 | t0: 2 , t1: 1 , t2: 1 , t3: 1 , a0: 1 , a1: 2 , a2: 0 , s0: 0 , s1: 0 , s2: 0 , zero: 0, dr: 0 , ra: 208, sp: 4085, tr: 0 | rin : 0, rout: 0
 
 Exit code: |-
 Halt: Stopping execution
