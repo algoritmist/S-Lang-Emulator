@@ -14,7 +14,7 @@ DefinitionArgs ::= (Variable)
 Expr ::= "(" Expr ")" | FunctionCall | LetExpr | IfThenElseExpr | BinOp Expr Expr | UnOp Expr | Primitive
 FunctionCall ::= FunctionName CallArgs
 LetExpr ::= "Let" [VariableDefinition] "In" VariableDefinition
-IfThenElseExpr ::= "If" Expr "Then" [Expr] | "If" Expr "Then" [Expr] "Else" [Expr]
+IfThenElseExpr ::= "If" Expr "Then" Expr | "If" Expr "Then" Expr "Else" Expr
 BinOp ::= + | - | * | / | == | > | < | /=
 UnOp ::= - | head | tail
 CallArgs ::= (Expr)
