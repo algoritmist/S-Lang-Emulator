@@ -1,7 +1,7 @@
 # Slang-Emulator
 Выполнил: Баранов Вячеслав Григорьевич, 335185
 
-Вариант: miranda | risc | harv | hw | instr | struct | stream | port | pstr | prob5 | pipeline
+Вариант: ```miranda | risc | harv | hw | instr | struct | stream | port | pstr | prob5 | pipeline```
 ## Язык программирования
 ```Slang``` &ndash; это упрощенный функциональный язык программирования, похожий на Miranda и имеющий небольшие синтаксические отличия.
 Так как язык содержит немало конструкций, я решил привести его описание в виде БНФ с синтаксическим сахаром
@@ -46,28 +46,28 @@ Cтоит отметить, что язык не поддерживает patter
 
 ## Набор инструкций
 
-| №  | Opcode | Инструкция | Тип машинного слова | Тип инструкции | Описание                       |
-|----|--------|------------|---------------------|----------------|--------------------------------|
-| 1  | 0      | Add        | R                   | R-R            | rd <- @rs1 + @rs2              |
-| 2  | 1      | Sub        | R                   | R-R            | rd <- @rs1 - @rs2              |
-| 3  | 2      | Mul        | R                   | R-R            | rd <- @rs1 * @rs2              |
-| 4  | 3      | Div        | R                   | R-R            | rd <- @rs1 / @rs2              |
-| 5  | 8      | Mod        | R                   | R-R            | rd <- @rs1 % @rs2              |
-| 6  | 16     | AddI       | I                   | R-R            | rd <- @rs1 + imm               |
-| 7  | 17     | SubI       | I                   | R-R            | rd <- @rs1 - imm               |
-| 8  | 18     | MulI       | I                   | R-R            | rd <- @rs1 * imm               |
-| 9  | 19     | DivI       | I                   | R-R            | rd <- @rs1 / imm               |
-| 10 | 24     | ModI       | I                   | R-R            | rd <- @rs1 % imm               |
-| 11 | 20     | LWM        | I                   | R-M            | rd <- @data[@rs1+imm]          |
-| 12 | 21     | SWM        | I                   | R-M            | data[@rs1+imm] <- @rd          |
-| 13 | 22     | LWI        | I                   | M-M            | data[@rs1+imm] <- in[@inPtr]   |
-| 14 | 23     | SWO        | I                   | M-M            | out[@outPtr] <- data[@rs1+imm] |
-| 15 | 4      | BE         | B                   | Branch         | if(@rs1==@rs2) pc <- pc + imm  |
-| 16 | 5      | BG         | B                   | Branch         | if(@rs1>@rs2) pc <- pc + imm   |
-| 17 | 6      | BNE        | B                   | Branch         | if(@rs1<>@rs2) pc <- pc + imm  |
-| 18 | 7      | BL         | B                   | Branch         | if(@rs1<@rs2) pc <- pc + imm   |
-| 19 | 31     | JMP        | J                   | Jump           | pc <- @rd + imm                |
-| 20 | 25     | SavePC     | R                   | R-R            | ra <- pc                       |
+| №  | Opcode | Инструкция | Тип машинного слова | Тип инструкции | Описание                             |
+|----|--------|------------|---------------------|----------------|--------------------------------------|
+| 1  | 0      | Add        | R                   | R-R            | ```rd <- @rs1 + @rs2```              |
+| 2  | 1      | Sub        | R                   | R-R            | ```rd <- @rs1 - @rs2```              |
+| 3  | 2      | Mul        | R                   | R-R            | ```rd <- @rs1 * @rs2```              |
+| 4  | 3      | Div        | R                   | R-R            | ```rd <- @rs1 / @rs2```              |
+| 5  | 8      | Mod        | R                   | R-R            | ```rd <- @rs1 % @rs2```              |
+| 6  | 16     | AddI       | I                   | R-R            | ```rd <- @rs1 + imm```               |
+| 7  | 17     | SubI       | I                   | R-R            | ```rd <- @rs1 - imm```               |
+| 8  | 18     | MulI       | I                   | R-R            | ```rd <- @rs1 * imm```               |
+| 9  | 19     | DivI       | I                   | R-R            | ```rd <- @rs1 / imm```               |
+| 10 | 24     | ModI       | I                   | R-R            | ```rd <- @rs1 % imm```               |
+| 11 | 20     | LWM        | I                   | R-M            | ```rd <- @data[@rs1+imm]```          |
+| 12 | 21     | SWM        | I                   | R-M            | ```data[@rs1+imm] <- @rd```          |
+| 13 | 22     | LWI        | I                   | M-M            | ```data[@rs1+imm] <- @in```          |
+| 14 | 23     | SWO        | I                   | M-M            | ```@out <- data[@rs1+imm]```         |
+| 15 | 4      | BE         | B                   | Branch         | ```if(@rs1==@rs2) pc <- pc + imm```  |
+| 16 | 5      | BG         | B                   | Branch         | ```if(@rs1>@rs2) pc <- pc + imm```   |
+| 17 | 6      | BNE        | B                   | Branch         | ```if(@rs1<>@rs2) pc <- pc + imm```  |
+| 18 | 7      | BL         | B                   | Branch         | ```if(@rs1<@rs2) pc <- pc + imm ```  |
+| 19 | 31     | JMP        | J                   | Jump           | ```pc <- @rd + imm```                |
+| 20 | 25     | SavePC     | R                   | R-R            | ```ra <- pc```                       |
 
 ### Псевдоинстркуции
 | №  | Инструкция  | Тип машинного слова | Тип инструкции | Описание                               |
@@ -89,13 +89,14 @@ Cтоит отметить, что язык не поддерживает patter
 ### Control Unit
 ![ControlUnit](images/control_unit.png)
 ## Транслятор
-![Исходный код](src/Translator.hs)
+[Исходный код](src/Translator.hs)
+
 Преобразование происходит в четыре стадии:
 ```AST -> CFG -> Pseudo Asm -> Real Asm```
 
 На второй стадии также происходит распределение регистров.
 
-На четвертой стадии высчитываются реальные адреса меток и данных (см. ![Converter](src/Converter.hs))
+На четвертой стадии высчитываются реальные адреса меток и данных (см. [Converter](src/Converter.hs))
 ## Тестирование
 В качестве тестов было использовано:
 1. hello
