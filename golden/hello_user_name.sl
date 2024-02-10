@@ -1,1 +1,1 @@
-main() = output(addLists("Hello, ", input(5)));
+main() = output("What is your name? ") + output(addLists("Hello, ", input(5)));
